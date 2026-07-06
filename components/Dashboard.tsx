@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Header from './Header';
 import ScheduleList from './ScheduleList';
 import AddScheduleModal from './AddScheduleModal';
+import ExecutionLogsModal from './ExecutionLogsModal';
 import { PlusIcon, ArrowPathIcon, CheckCircleIcon, PlayCircleIcon, ClockIcon } from '@heroicons/react/24/outline';
 
 interface Schedule {
@@ -27,6 +28,8 @@ export default function Dashboard() {
   const [scheduleToEdit, setScheduleToEdit] = useState<Schedule | null>(null);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
   const [error, setError] = useState<string | null>(null);
+  const [isLogsModalOpen, setIsLogsModalOpen] = useState(false);
+  const [logsSchedule, setLogsSchedule] = useState<Schedule | null>(null);
 
   const fetchSchedules = async () => {
     setLoading(true);
@@ -62,6 +65,11 @@ export default function Dashboard() {
     setScheduleToEdit(schedule);
     setModalMode('edit');
     setIsModalOpen(true);
+  };
+
+  const handleViewLogsClick = (schedule: Schedule) => {
+    setLogsSchedule(schedule);
+    setIsLogsModalOpen(true);
   };
 
   const handleAddSchedule = async (scheduleData: any) => {
@@ -277,6 +285,7 @@ export default function Dashboard() {
           onToggle={handleToggleSchedule}
           onExecute={handleExecuteSchedule}
           onEdit={handleEditClick}
+          onViewLogs={handleViewLogsClick}
         />
 
         {/* Features Section */}
@@ -313,6 +322,12 @@ export default function Dashboard() {
         onSubmit={handleAddSchedule}
         scheduleToEdit={scheduleToEdit}
         mode={modalMode}
+      />
+
+      <ExecutionLogsModal
+        isOpen={isLogsModalOpen}
+        onClose={() => setIsLogsModalOpen(false)}
+        schedule={logsSchedule}
       />
     </div>
   );

@@ -9,7 +9,8 @@ import {
   XCircleIcon,
   ClockIcon,
   LinkIcon,
-  PencilIcon
+  PencilIcon,
+  DocumentTextIcon
 } from '@heroicons/react/24/outline';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -34,6 +35,7 @@ interface ScheduleListProps {
   onToggle: (id: string, enabled: boolean) => void;
   onExecute: (id: string) => void;
   onEdit: (schedule: Schedule) => void;
+  onViewLogs: (schedule: Schedule) => void;
 }
 
 export default function ScheduleList({ 
@@ -42,7 +44,8 @@ export default function ScheduleList({
   onDelete, 
   onToggle, 
   onExecute,
-  onEdit
+  onEdit,
+  onViewLogs
 }: ScheduleListProps) {
   
   const getScheduleDisplay = (schedule: string) => {
@@ -148,6 +151,14 @@ export default function ScheduleList({
                   Run Now
                 </button>
                 
+                <button
+                  onClick={() => onViewLogs(schedule)}
+                  className="p-2 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg transition-colors"
+                  title="View Logs"
+                >
+                  <DocumentTextIcon className="w-4 h-4" />
+                </button>
+
                 <button
                   onClick={() => onEdit(schedule)}
                   className="p-2 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg transition-colors"
