@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import UrlSchedule from '@/models/UrlSchedule';
+import { startScheduler } from '@/lib/scheduler';
 
 export async function GET(request: NextRequest) {
   try {
     await connectDB();
+    startScheduler();
 
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
