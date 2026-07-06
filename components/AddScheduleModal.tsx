@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog } from '@headlessui/react';
 import { XMarkIcon, PlusIcon, TrashIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 
@@ -8,6 +8,8 @@ interface AddScheduleModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
+  scheduleToEdit?: any;
+  mode?: 'create' | 'edit';
 }
 
 interface HeaderField {
@@ -16,19 +18,66 @@ interface HeaderField {
   enabled: boolean;
 }
 
-export default function AddScheduleModal({ isOpen, onClose, onSubmit }: AddScheduleModalProps) {
+export default function AddScheduleModal({ 
+  isOpen, 
+  onClose, 
+  onSubmit,
+  scheduleToEdit,
+  mode = 'create'
+}: AddScheduleModalProps) {
   const [formData, setFormData] = useState({
     name: '',
     url: 'https://',
     schedule: 'every-hour',
     customCron: '',
     agent: 'postman',
+    method: 'GET',
+    body: '',
   });
 
   const [headers, setHeaders] = useState<HeaderField[]>([
     { key: 'Content-Type', value: 'application/json', enabled: true },
     { key: 'Accept', value: 'application/json', enabled: true },
   ]);
+
+  useEffect(() => {
+    if (isOpen) {
+      if (mode === 'edit' && scheduleToEdit) {
+        setFormData({
+          name: scheduleToEdit.name || '',
+          url: scheduleToEdit.url || 'https://',
+          schedule: scheduleToEdit.schedule || 'every-hour',
+          customCron: scheduleToEdit.customCron || '',
+          agent: scheduleToEdit.agent || 'postman',
+          method: scheduleToEdit.method || 'GET',
+          body: scheduleToEdit.body || '',
+        });
+        setHeaders(
+          scheduleToEdit.headers && scheduleToEdit.headers.length > 0
+            ? scheduleToEdit.headers.map((h: any) => ({
+                key: h.key,
+                value: h.value,
+                enabled: h.enabled !== undefined ? h.enabled : true,
+              }))
+            : []
+        );
+      } else {
+        setFormData({
+          name: '',
+          url: 'https://',
+          schedule: 'every-hour',
+          customCron: '',
+          agent: 'postman',
+          method: 'GET',
+          body: '',
+        });
+        setHeaders([
+          { key: 'Content-Type', value: 'application/json', enabled: true },
+          { key: 'Accept', value: 'application/json', enabled: true },
+        ]);
+      }
+    }
+  }, [isOpen, mode, scheduleToEdit]);
 
   const addHeader = () => {
     setHeaders([...headers, { key: '', value: '', enabled: true }]);
@@ -53,19 +102,6 @@ export default function AddScheduleModal({ isOpen, onClose, onSubmit }: AddSched
     };
     
     onSubmit(scheduleData);
-    
-    // Reset form
-    setFormData({
-      name: '',
-      url: 'https://',
-      schedule: 'every-hour',
-      customCron: '',
-      agent: 'postman',
-    });
-    setHeaders([
-      { key: 'Content-Type', value: 'application/json', enabled: true },
-      { key: 'Accept', value: 'application/json', enabled: true },
-    ]);
   };
 
   return (
@@ -75,17 +111,20 @@ export default function AddScheduleModal({ isOpen, onClose, onSubmit }: AddSched
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel className="bg-gray-900 border border-gray-700 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
           {/* Header */}
-          <div className="sticky top-0 bg-gray-900 border-b border-gray-700 px-6 py-4">
+          <div className="sticky top-0 bg-gray-900 border-b border-gray-700 px-6 py-4 z-10">
             <div className="flex items-center justify-between">
               <div>
                 <Dialog.Title className="text-xl font-bold text-white">
-                  Create New Schedule
+                  {mode === 'edit' ? 'Edit Schedule' : 'Create New Schedule'}
                 </Dialog.Title>
-                <p className="text-gray-400 text-sm mt-1">Configure automated URL monitoring</p>
+                <p className="text-gray-400 text-sm mt-1">
+                  {mode === 'edit' ? 'Modify schedule configuration' : 'Configure automated URL monitoring'}
+                </p>
               </div>
               <button
                 onClick={onClose}
                 className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                type="button"
               >
                 <XMarkIcon className="w-5 h-5 text-gray-400" />
               </button>
@@ -110,20 +149,56 @@ export default function AddScheduleModal({ isOpen, onClose, onSubmit }: AddSched
                 />
               </div>
               
-              <div>
-                <label className="block text-sm font-medium text-white mb-2">
-                  Target URL *
-                </label>
-                <input
-                  type="url"
-                  required
-                  value={formData.url}
-                  onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all text-white font-mono text-sm"
-                  placeholder="https://api.example.com/health"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                <div className="sm:col-span-1">
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Method
+                  </label>
+                  <select
+                    value={formData.method}
+                    onChange={(e) => setFormData({ ...formData, method: e.target.value })}
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all text-white font-bold"
+                  >
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                    <option value="PATCH">PATCH</option>
+                    <option value="HEAD">HEAD</option>
+                  </select>
+                </div>
+                
+                <div className="sm:col-span-3">
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Target URL *
+                  </label>
+                  <input
+                    type="url"
+                    required
+                    value={formData.url}
+                    onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all text-white font-mono text-sm"
+                    placeholder="https://api.example.com/health"
+                  />
+                </div>
               </div>
             </div>
+
+            {/* Request Body (only for POST, PUT, PATCH) */}
+            {['POST', 'PUT', 'PATCH'].includes(formData.method) && (
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">
+                  Request Body (JSON / Raw)
+                </label>
+                <textarea
+                  value={formData.body}
+                  onChange={(e) => setFormData({ ...formData, body: e.target.value })}
+                  rows={4}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all text-white font-mono text-sm"
+                  placeholder='{&#10;  "key": "value"&#10;}'
+                />
+              </div>
+            )}
 
             {/* Schedule & Agent */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -194,7 +269,7 @@ export default function AddScheduleModal({ isOpen, onClose, onSubmit }: AddSched
                     Custom Headers
                   </label>
                   <p className="text-gray-500 text-xs mt-1">
-                    Headers will be randomly selected from enabled options
+                    Headers will be included in the scheduled request
                   </p>
                 </div>
                 <button
@@ -231,7 +306,7 @@ export default function AddScheduleModal({ isOpen, onClose, onSubmit }: AddSched
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <label className="flex items-center gap-1">
+                      <label className="flex items-center gap-1 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={header.enabled}
@@ -260,10 +335,10 @@ export default function AddScheduleModal({ isOpen, onClose, onSubmit }: AddSched
                 <div>
                   <p className="text-blue-300 font-medium mb-1">How it works</p>
                   <ul className="text-blue-400/80 text-sm space-y-1">
-                    <li>• URLs are called at the specified frequency</li>
-                    <li>• Headers are randomly selected from enabled options</li>
+                    <li>• URLs are called using the selected HTTP method</li>
+                    <li>• Custom headers are sent with each automated check</li>
+                    <li>• Request bodies are supported for POST, PUT, and PATCH</li>
                     <li>• Each agent uses different User-Agent strings</li>
-                    <li>• All executions are logged for monitoring</li>
                   </ul>
                 </div>
               </div>
@@ -282,7 +357,7 @@ export default function AddScheduleModal({ isOpen, onClose, onSubmit }: AddSched
                 type="submit"
                 className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all shadow-lg"
               >
-                Create Schedule
+                {mode === 'edit' ? 'Save Changes' : 'Create Schedule'}
               </button>
             </div>
           </form>

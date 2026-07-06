@@ -24,6 +24,16 @@ const UrlScheduleSchema = new mongoose.Schema({
     enum: ['postman', 'firefox', 'chrome', 'safari', 'edge', 'curl'],
     default: 'postman',
   },
+  method: {
+    type: String,
+    required: true,
+    enum: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD'],
+    default: 'GET',
+  },
+  body: {
+    type: String,
+    required: false,
+  },
   headers: [{
     key: String,
     value: String,
@@ -49,12 +59,6 @@ const UrlScheduleSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
-
-// Update the updatedAt field on save
-UrlScheduleSchema.pre('save', function(this: any, next: any) {
-  this.updatedAt = new Date();
-  next();
 });
 
 export default mongoose.models.UrlSchedule || mongoose.model('UrlSchedule', UrlScheduleSchema);

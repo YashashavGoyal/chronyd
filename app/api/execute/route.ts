@@ -2,15 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import UrlSchedule from '@/models/UrlSchedule';
 import ExecutionLog from '@/models/ExecutionLog';
-import { localDb } from '@/lib/localDb';
 
-async function makeRequest(url: string, headers: any[], agent: string) {
+async function makeRequest(url: string, headers: any[], agent: string, method: string = 'GET', body?: string) {
   // Select random enabled headers
   const enabledHeaders = headers.filter(h => h.enabled);
   const selectedHeaders: any = {};
   
   if (enabledHeaders.length > 0) {
-    // Use all enabled headers
     enabledHeaders.forEach(h => {
       selectedHeaders[h.key] = h.value;
     });
@@ -41,9 +39,11 @@ async function makeRequest(url: string, headers: any[], agent: string) {
   const startTime = Date.now();
   
   try {
+    const isBodySupported = ['POST', 'PUT', 'PATCH'].includes(method.toUpperCase());
     const response = await fetch(url, {
-      method: 'GET',
+      method: method.toUpperCase(),
       headers: selectedHeaders,
+      body: isBodySupported && body ? body : undefined,
     });
     
     const responseTime = Date.now() - startTime;
@@ -71,24 +71,13 @@ async function makeRequest(url: string, headers: any[], agent: string) {
 }
 
 export async function POST(request: NextRequest) {
-  let isMongo = false;
   try {
     await connectDB();
-    isMongo = true;
-  } catch (err) {
-    console.warn('MongoDB connection failed, using local JSON database fallback.');
-  }
-
-  try {
-    const body = await request.json();
-    const { scheduleId, manual } = body;
     
-    let schedule;
-    if (isMongo) {
-      schedule = await UrlSchedule.findById(scheduleId);
-    } else {
-      schedule = localDb.getScheduleById(scheduleId);
-    }
+    const body = await request.json();
+    const { scheduleId } = body;
+    
+    const schedule = await UrlSchedule.findById(scheduleId);
     
     if (!schedule) {
       return NextResponse.json(
@@ -98,10 +87,16 @@ export async function POST(request: NextRequest) {
     }
     
     // Make the request
-    const result = await makeRequest(schedule.url, schedule.headers, schedule.agent);
+    const result = await makeRequest(
+      schedule.url,
+      schedule.headers,
+      schedule.agent,
+      schedule.method || 'GET',
+      schedule.body || undefined
+    );
     
     // Log the execution
-    const logData = {
+    const log = new ExecutionLog({
       scheduleId: schedule._id,
       status: result.success ? 'success' : 'failed',
       statusCode: result.statusCode,
@@ -112,26 +107,14 @@ export async function POST(request: NextRequest) {
       })),
       error: result.error,
       responseBody: result.responseBody ? result.responseBody.substring(0, 5000) : null,
-    };
+    });
     
-    let log;
-    if (isMongo) {
-      log = new ExecutionLog(logData);
-      await log.save();
-      
-      // Update the schedule
-      schedule.lastRun = new Date();
-      schedule.lastStatus = result.success ? 'success' : 'failed';
-      await schedule.save();
-    } else {
-      log = localDb.addLog(logData);
-      
-      // Update the schedule
-      localDb.updateSchedule(scheduleId, {
-        lastRun: new Date().toISOString(),
-        lastStatus: result.success ? 'success' : 'failed'
-      });
-    }
+    await log.save();
+    
+    // Update the schedule
+    schedule.lastRun = new Date();
+    schedule.lastStatus = result.success ? 'success' : 'failed';
+    await schedule.save();
     
     return NextResponse.json({
       success: true,

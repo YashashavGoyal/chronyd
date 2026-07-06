@@ -1,36 +1,151 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ChronoSphere - AI-Powered URL Scheduler
+
+A modern, AI-inspired web application for scheduling automated URL calls with custom agents, random header selection, and MongoDB storage.
+
+## Features
+
+- **🕐 Intelligent Scheduling**: Configure URL calls at regular intervals (minute, 5-minutes, hourly, daily, weekly, custom cron)
+- **🌐 Multiple Agent Support**: Choose from different agents (Postman, Firefox, Chrome, Safari, Edge, cURL) for varied user-agent simulation
+- **🔀 Random Header Selection**: Define custom headers and have them randomly selected on each request
+- **📊 Dashboard**: Real-time monitoring with success rates, execution logs, and status tracking
+- **🔒 MongoDB Integration**: Persistent storage of schedules and execution logs using MongoDB Atlas
+- **🎨 Modern UI**: Clean, futuristic interface with gradient effects, glass morphism, and smooth animations
+
+## Tech Stack
+
+- **Next.js 14** with App Router
+- **TypeScript** for type safety
+- **Tailwind CSS** for styling
+- **MongoDB Atlas** with Mongoose ODM
+- **React Hook Form** for form handling
+- **Headless UI** for accessible components
+- **Hero Icons** for icons
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js 18+ 
+- MongoDB Atlas account (or local MongoDB instance)
+- npm or yarn
 
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd url-scheduler
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Configure environment variables:
+```bash
+cp .env.local.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Edit `.env.local` with your MongoDB connection string:
+```env
+MONGODB_URI=mongodb+srv://username:password@cluster0.mongodb.net/url-scheduler
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
-## Learn More
+4. Run the development server:
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API Endpoints
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Schedules
+- `GET /api/schedules` - List all schedules with pagination
+- `POST /api/schedules` - Create new schedule
+- `GET /api/schedules/[id]` - Get specific schedule
+- `PUT /api/schedules/[id]` - Update schedule
+- `DELETE /api/schedules/[id]` - Delete schedule
 
-## Deploy on Vercel
+### Execution
+- `POST /api/execute` - Manually execute a schedule
+- `GET /api/schedules/[id]/logs` - Get execution logs for a schedule
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+url-scheduler/
+├── app/                    # Next.js app router pages
+│   ├── api/               # API routes
+│   ├── globals.css        # Global styles
+│   ├── layout.tsx         # Root layout
+│   └── page.tsx           # Home page
+├── components/            # React components
+│   ├── Dashboard.tsx      # Main dashboard
+│   ├── Header.tsx         # Navigation header
+│   ├── ScheduleList.tsx   # Schedule table
+│   └── AddScheduleModal.tsx # Schedule creation modal
+├── lib/                   # Utility functions
+│   └── mongodb.ts         # MongoDB connection
+├── models/                # MongoDB models
+│   ├── UrlSchedule.ts     # Schedule schema
+│   └── ExecutionLog.ts    # Execution log schema
+└── public/               # Static assets
+```
+
+## Key Features Explained
+
+### Random Header Selection
+- Add multiple custom headers with key-value pairs
+- Enable/disable headers to control randomization pool
+- On each request, enabled headers are randomly selected
+- Perfect for A/B testing different API configurations
+
+### Multiple Agent Support
+- Each schedule can use a different agent
+- Agents simulate different User-Agent strings
+- Useful for testing API compatibility across different clients
+
+### Execution Logging
+- Every execution is logged with:
+  - Timestamp
+  - Status (success/failed/error)
+  - Response time
+  - Status code
+  - Headers used
+  - Error messages (if any)
+
+## Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| MONGODB_URI | MongoDB connection string | Yes |
+| NEXT_PUBLIC_APP_URL | Application URL for CORS | Optional |
+
+## Deployment
+
+### Vercel (Recommended)
+1. Push code to GitHub/GitLab
+2. Import project in Vercel
+3. Add environment variables
+4. Deploy
+
+### Self-Hosted
+1. Build the application:
+```bash
+npm run build
+```
+
+2. Start the production server:
+```bash
+npm start
+```
+
+## License
+
+MIT
+
+## Support
+
+For issues and feature requests, please create an issue in the repository.

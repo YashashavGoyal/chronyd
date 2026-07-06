@@ -8,7 +8,8 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   ClockIcon,
-  LinkIcon
+  LinkIcon,
+  PencilIcon
 } from '@heroicons/react/24/outline';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -22,6 +23,8 @@ interface Schedule {
   lastRun: string | null;
   lastStatus: string | null;
   headers: Array<{ key: string; value: string; enabled: boolean }>;
+  method?: string;
+  body?: string;
 }
 
 interface ScheduleListProps {
@@ -30,6 +33,7 @@ interface ScheduleListProps {
   onDelete: (id: string) => void;
   onToggle: (id: string, enabled: boolean) => void;
   onExecute: (id: string) => void;
+  onEdit: (schedule: Schedule) => void;
 }
 
 export default function ScheduleList({ 
@@ -37,7 +41,8 @@ export default function ScheduleList({
   loading, 
   onDelete, 
   onToggle, 
-  onExecute 
+  onExecute,
+  onEdit
 }: ScheduleListProps) {
   
   const getScheduleDisplay = (schedule: string) => {
@@ -63,6 +68,15 @@ export default function ScheduleList({
       'curl': 'bg-gray-600',
     };
     return agentMap[agent] || 'bg-gray-500';
+  };
+
+  const getMethodStyles = (method: string = 'GET') => {
+    const methodUpper = method.toUpperCase();
+    if (methodUpper === 'GET') return 'bg-green-500/10 text-green-400 border-green-500/30';
+    if (methodUpper === 'POST') return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30';
+    if (methodUpper === 'PUT' || methodUpper === 'PATCH') return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
+    if (methodUpper === 'DELETE') return 'bg-red-500/10 text-red-400 border-red-500/30';
+    return 'bg-gray-500/10 text-gray-400 border-gray-500/30';
   };
 
   if (loading) {
@@ -101,9 +115,12 @@ export default function ScheduleList({
             {/* Header Row */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
               <div className="flex-1">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <div className={`w-3 h-3 rounded-full ${agentColor}`}></div>
                   <h3 className="text-xl font-bold text-white">{schedule.name}</h3>
+                  <span className={`px-2 py-0.5 rounded text-xs font-bold font-mono border ${getMethodStyles(schedule.method)}`}>
+                    {schedule.method || 'GET'}
+                  </span>
                   <span className={`px-2 py-1 rounded-full text-xs ${schedule.enabled ? 'bg-green-500/20 text-green-400' : 'bg-gray-700 text-gray-400'}`}>
                     {schedule.enabled ? 'Active' : 'Paused'}
                   </span>
@@ -131,6 +148,14 @@ export default function ScheduleList({
                   Run Now
                 </button>
                 
+                <button
+                  onClick={() => onEdit(schedule)}
+                  className="p-2 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg transition-colors"
+                  title="Edit"
+                >
+                  <PencilIcon className="w-4 h-4" />
+                </button>
+
                 <button
                   onClick={() => onToggle(schedule._id, !schedule.enabled)}
                   className={`p-2 rounded-lg transition-colors ${schedule.enabled ? 'bg-gray-700 hover:bg-gray-600' : 'bg-green-600 hover:bg-green-700'}`}
@@ -194,11 +219,16 @@ export default function ScheduleList({
               </div>
             </div>
 
-            {/* Quick Actions */}
+            {/* Quick Actions / Headers Preview / Request Body Preview */}
             <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-700/50">
               <span className="px-2 py-1 bg-gray-700/50 text-gray-300 rounded text-xs">
                 ID: {schedule._id.substring(0, 8)}...
               </span>
+              {schedule.body && (
+                <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs truncate max-w-xs" title="Has Request Body">
+                  Body: {schedule.body.substring(0, 20)}...
+                </span>
+              )}
               {schedule.headers.slice(0, 3).map((header, idx) => (
                 <span 
                   key={idx}

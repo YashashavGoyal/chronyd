@@ -16,24 +16,32 @@ interface Schedule {
   lastRun: string | null;
   lastStatus: string | null;
   headers: Array<{ key: string; value: string; enabled: boolean }>;
+  method?: string;
+  body?: string;
 }
 
 export default function Dashboard() {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [scheduleToEdit, setScheduleToEdit] = useState<Schedule | null>(null);
+  const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
+  const [error, setError] = useState<string | null>(null);
 
   const fetchSchedules = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch('/api/schedules');
       const data = await res.json();
       if (data.success) {
         setSchedules(data.data || []);
       } else {
+        setError(data.error || 'Failed to load schedules');
         console.error('Failed to fetch schedules:', data.error);
       }
-    } catch (error) {
+    } catch (error: any) {
+      setError(error.message || 'Error fetching schedules');
       console.error('Error fetching schedules:', error);
     } finally {
       setLoading(false);
@@ -44,26 +52,58 @@ export default function Dashboard() {
     fetchSchedules();
   }, []);
 
+  const handleNewScheduleClick = () => {
+    setScheduleToEdit(null);
+    setModalMode('create');
+    setIsModalOpen(true);
+  };
+
+  const handleEditClick = (schedule: Schedule) => {
+    setScheduleToEdit(schedule);
+    setModalMode('edit');
+    setIsModalOpen(true);
+  };
+
   const handleAddSchedule = async (scheduleData: any) => {
     try {
-      const res = await fetch('/api/schedules', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(scheduleData),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setIsModalOpen(false);
-        fetchSchedules();
-        alert('Schedule created successfully!');
+      if (modalMode === 'edit' && scheduleToEdit) {
+        // PUT request to update
+        const res = await fetch(`/api/schedules/${scheduleToEdit._id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(scheduleData),
+        });
+        const data = await res.json();
+        if (data.success) {
+          setIsModalOpen(false);
+          fetchSchedules();
+          alert('Schedule updated successfully!');
+        } else {
+          alert('Failed to update schedule: ' + data.error);
+        }
       } else {
-        alert('Failed to create schedule: ' + data.error);
+        // POST request to create
+        const res = await fetch('/api/schedules', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(scheduleData),
+        });
+        const data = await res.json();
+        if (data.success) {
+          setIsModalOpen(false);
+          fetchSchedules();
+          alert('Schedule created successfully!');
+        } else {
+          alert('Failed to create schedule: ' + data.error);
+        }
       }
     } catch (error) {
-      console.error('Error adding schedule:', error);
-      alert('Failed to create schedule');
+      console.error('Error saving schedule:', error);
+      alert('Failed to save schedule');
     }
   };
 
@@ -117,7 +157,7 @@ export default function Dashboard() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ scheduleId: id, manual: true }),
+        body: JSON.stringify({ scheduleId: id }),
       });
       const data = await res.json();
       if (data.success) {
@@ -149,6 +189,24 @@ export default function Dashboard() {
             Schedule API calls, monitor responses, and test endpoints with custom agents and headers
           </p>
         </div>
+
+        {/* Error Banner */}
+        {error && (
+          <div className="mb-8 p-4 bg-red-900/30 border border-red-800/50 rounded-xl flex items-start gap-3">
+            <span className="text-red-400 text-xl flex-shrink-0">⚠️</span>
+            <div>
+              <h3 className="text-red-200 font-bold text-sm">Database Connection Alert</h3>
+              <p className="text-red-400/90 text-sm mt-1">
+                Could not establish a connection to your MongoDB database. 
+                If you are using MongoDB Atlas, please check that your current network IP address is added to the 
+                <a href="https://cloud.mongodb.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 underline hover:text-blue-300 mx-1">
+                  Atlas IP Whitelist
+                </a> 
+                and that your connection string in <code className="bg-gray-800 px-1 py-0.5 rounded font-mono text-xs text-white">.env.local</code> is correct. (Error: {error})
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -202,7 +260,7 @@ export default function Dashboard() {
             </button>
             
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={handleNewScheduleClick}
               className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all"
             >
               <PlusIcon className="w-4 h-4" />
@@ -218,6 +276,7 @@ export default function Dashboard() {
           onDelete={handleDeleteSchedule}
           onToggle={handleToggleSchedule}
           onExecute={handleExecuteSchedule}
+          onEdit={handleEditClick}
         />
 
         {/* Features Section */}
@@ -252,6 +311,8 @@ export default function Dashboard() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleAddSchedule}
+        scheduleToEdit={scheduleToEdit}
+        mode={modalMode}
       />
     </div>
   );
