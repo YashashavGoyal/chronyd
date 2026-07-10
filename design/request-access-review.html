@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Access - Utiqx</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        background: '#030303',
+                        surface: '#0a0a0a',
+                        border: '#27272a',
+                        primary: '#ededed',
+                        muted: '#a1a1aa'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #030303;
+            color: #ededed;
+        }
+
+        .auth-bg {
+            background-image: 
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+        }
+
+        .auth-card {
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+        }
+
+        .input-field {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+
+        .submit-btn {
+            background: #fff;
+            color: #000;
+            transition: all 0.2s;
+        }
+        
+        .submit-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col items-center justify-center auth-bg selection:bg-white/20 p-4 py-12">
+
+    <!-- Top Left Logo -->
+    <a href="landing-review.html" class="absolute top-8 left-8 flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div class="w-6 h-6 bg-white rounded-sm flex items-center justify-center">
+            <i data-lucide="command" class="w-3.5 h-3.5 text-black"></i>
+        </div>
+        <span class="font-bold tracking-tight text-lg">Utiqx</span>
+    </a>
+
+    <!-- Auth Card -->
+    <div class="auth-card w-full max-w-[500px] rounded-[24px] p-8 relative overflow-hidden">
+        
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold tracking-tight mb-2">Request Early Access</h1>
+            <p class="text-sm text-muted">Join the waitlist to get access to the ultimate developer toolkit.</p>
+        </div>
+
+        <!-- Form -->
+        <form class="space-y-5" onsubmit="event.preventDefault(); alert('Access request submitted!'); window.location.href='landing-review.html';">
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="text-xs font-semibold text-primary/80 uppercase tracking-wider">First Name</label>
+                    <input 
+                        type="text" 
+                        placeholder="John" 
+                        required
+                        class="input-field w-full px-4 py-2.5 rounded-lg text-sm text-primary placeholder:text-muted/50"
+                    >
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-semibold text-primary/80 uppercase tracking-wider">Last Name</label>
+                    <input 
+                        type="text" 
+                        placeholder="Doe" 
+                        required
+                        class="input-field w-full px-4 py-2.5 rounded-lg text-sm text-primary placeholder:text-muted/50"
+                    >
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-xs font-semibold text-primary/80 uppercase tracking-wider">Work Email</label>
+                <input 
+                    type="email" 
+                    placeholder="name@company.com" 
+                    required
+                    class="input-field w-full px-4 py-2.5 rounded-lg text-sm text-primary placeholder:text-muted/50"
+                >
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-xs font-semibold text-primary/80 uppercase tracking-wider">Company</label>
+                <input 
+                    type="text" 
+                    placeholder="Acme Corp" 
+                    class="input-field w-full px-4 py-2.5 rounded-lg text-sm text-primary placeholder:text-muted/50"
+                >
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-xs font-semibold text-primary/80 uppercase tracking-wider">How will you use Utiqx?</label>
+                <textarea 
+                    placeholder="Tell us a bit about your use case..." 
+                    rows="3"
+                    class="input-field w-full px-4 py-2.5 rounded-lg text-sm text-primary placeholder:text-muted/50 resize-y"
+                ></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn w-full py-3 rounded-lg font-bold text-sm mt-4 flex items-center justify-center gap-2">
+                Submit Request
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+        </form>
+
+        <!-- Footer -->
+        <div class="mt-8 text-center border-t border-white/5 pt-6">
+            <p class="text-sm text-muted">
+                Already have an account? 
+                <a href="login-review.html" class="text-white font-medium hover:underline">Sign in</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
