@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Converter - Utiqx</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        background: '#000000',
+                        surface: '#0a0a0a',
+                        border: '#1a1a1a',
+                        primary: '#ffffff',
+                        muted: '#888888'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #000; color: #fff; }
+        
+        .panel {
+            background: rgba(10, 10, 10, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .panel:focus-within {
+            background: rgba(15, 15, 15, 0.8);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .floating-action-bar {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        textarea {
+            background: transparent;
+            border: none;
+            outline: none;
+            resize: none;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased h-screen flex overflow-hidden selection:bg-white/20">
+
+    <!-- Sidebar -->
+    <aside class="w-20 lg:w-64 border-r border-border bg-[#050505] flex flex-col h-full z-20 shrink-0 transition-all">
+        <div class="h-16 flex items-center justify-center lg:justify-start lg:px-6 border-b border-border/50">
+            <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center lg:mr-3"><i data-lucide="command" class="w-4 h-4 text-black"></i></div>
+            <span class="font-bold tracking-tight text-lg hidden lg:block">Utiqx</span>
+        </div>
+        <div class="p-3 lg:p-4 space-y-2 mt-4">
+            <a href="#" class="flex items-center justify-center lg:justify-start gap-3 p-3 lg:px-4 lg:py-2.5 rounded-xl text-sm text-muted hover:bg-white/5 hover:text-white transition-all">
+                <i data-lucide="layout-grid" class="w-5 h-5"></i> <span class="hidden lg:block">Dashboard</span>
+            </a>
+            <div class="pt-6 pb-2 px-3 hidden lg:block"><p class="text-[10px] font-bold text-muted/50 uppercase tracking-widest">Tools</p></div>
+            
+            <a href="#" class="flex items-center justify-center lg:justify-start gap-3 p-3 lg:px-4 lg:py-2.5 rounded-xl text-sm bg-white/10 text-white font-medium shadow-sm">
+                <i data-lucide="binary" class="w-5 h-5 text-blue-400"></i> <span class="hidden lg:block">Base64</span>
+            </a>
+            <a href="#" class="flex items-center justify-center lg:justify-start gap-3 p-3 lg:px-4 lg:py-2.5 rounded-xl text-sm text-muted hover:bg-white/5 hover:text-white transition-all">
+                <i data-lucide="key" class="w-5 h-5"></i> <span class="hidden lg:block">JWT Decode</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 flex flex-col h-full relative z-10 bg-[#000]">
+        
+        <!-- Minimalist Header -->
+        <header class="h-16 flex items-center justify-between px-8">
+            <h1 class="text-xl font-semibold tracking-tight">Base64 Encode/Decode</h1>
+            <div class="flex items-center gap-2 text-sm text-muted">
+                <span>Auto-sync is</span>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20">ON</span>
+            </div>
+        </header>
+
+        <!-- Editor Area -->
+        <div class="flex-1 p-8 pt-0 relative flex flex-col md:flex-row gap-6 min-h-0">
+            
+            <!-- Left: Plain Text -->
+            <div class="flex-1 panel rounded-2xl flex flex-col overflow-hidden group">
+                <div class="px-6 py-4 flex items-center justify-between border-b border-white/5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-muted group-focus-within:text-white transition-colors">Plain Text</span>
+                    <button class="text-muted hover:text-white"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </div>
+                <div class="flex-1 p-6">
+                    <textarea class="font-mono text-[15px] leading-relaxed placeholder:text-muted/30" placeholder="Type or paste text here..."></textarea>
+                </div>
+            </div>
+
+            <!-- Central Floating Actions (Desktop) -->
+            <div class="hidden md:flex flex-col items-center justify-center z-20">
+                <div class="floating-action-bar p-2 rounded-2xl flex flex-col gap-2">
+                    <button class="p-3 rounded-xl hover:bg-white/10 text-muted hover:text-white transition-colors group relative" title="Encode">
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                    <div class="w-8 h-[1px] bg-white/10 mx-auto"></div>
+                    <button class="p-3 rounded-xl hover:bg-white/10 text-muted hover:text-white transition-colors group relative" title="Decode">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right: Base64 -->
+            <div class="flex-1 panel rounded-2xl flex flex-col overflow-hidden group">
+                <div class="px-6 py-4 flex items-center justify-between border-b border-white/5">
+                    <span class="text-xs font-bold uppercase tracking-wider text-blue-400">Base64 String</span>
+                    <button class="text-blue-400 hover:text-blue-300 flex items-center gap-2 text-xs font-semibold bg-blue-500/10 px-3 py-1.5 rounded-lg transition-colors">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy
+                    </button>
+                </div>
+                <div class="flex-1 p-6">
+                    <textarea class="font-mono text-[15px] leading-relaxed text-blue-200 placeholder:text-blue-900/30 break-all" placeholder="Base64 output will appear here..."></textarea>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>

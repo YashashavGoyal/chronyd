@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Hasher - Utiqx</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        background: '#030303',
+                        surface: '#0a0a0a',
+                        border: '#1f1f22',
+                        primary: '#ededed',
+                        muted: '#878787'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #030303; color: #ededed; }
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+        .input-field {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+        }
+        .input-field:focus {
+            border-color: rgba(255, 255, 255, 0.3);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="antialiased h-screen flex overflow-hidden">
+
+    <!-- Sidebar (Simplified for mockup) -->
+    <aside class="w-64 border-r border-border bg-black/50 flex flex-col h-full z-20 shrink-0">
+        <div class="h-16 flex items-center px-6 border-b border-border/50">
+            <div class="w-7 h-7 bg-white rounded flex items-center justify-center mr-3"><i data-lucide="command" class="w-4 h-4 text-black"></i></div>
+            <span class="font-bold tracking-tight text-lg">Utiqx</span>
+        </div>
+        <div class="p-4 space-y-1">
+            <a href="design-review.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted hover:text-white transition-colors">
+                <i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard
+            </a>
+            <div class="pt-4 pb-2 px-3"><p class="text-xs font-semibold text-muted uppercase">Security</p></div>
+            <a href="tool-jwt-review.html" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted hover:text-white transition-colors">
+                <i data-lucide="key" class="w-4 h-4"></i> JWT Generator
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm bg-white/10 text-white font-medium">
+                <i data-lucide="hash" class="w-4 h-4 text-purple-400"></i> Password Hasher
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full relative z-10 overflow-hidden bg-gradient-to-br from-[#030303] to-[#0a0a0a]">
+        <!-- Topbar -->
+        <header class="h-16 flex items-center justify-between px-8 border-b border-white/[0.02]">
+            <div class="flex items-center text-sm font-medium text-muted">
+                <span>Security</span><i data-lucide="chevron-right" class="w-4 h-4 mx-1 opacity-50"></i><span class="text-primary">Password Hasher</span>
+            </div>
+        </header>
+
+        <!-- Tool Workspace -->
+        <div class="flex-1 overflow-hidden flex flex-col p-6">
+            
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight mb-1">Bcrypt Utility</h1>
+                    <p class="text-sm text-muted">Generate and verify secure bcrypt hashes instantly.</p>
+                </div>
+            </div>
+
+            <!-- New Structural Grid Layout -->
+            <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-0">
+                
+                <!-- Left Pane: Input & Settings -->
+                <div class="glass-panel rounded-xl flex flex-col h-full overflow-hidden border-white/5">
+                    <div class="p-4 border-b border-white/5 bg-black/40 flex items-center justify-between">
+                        <h3 class="text-xs font-semibold uppercase tracking-widest text-primary flex items-center gap-2">
+                            <i data-lucide="text-cursor-input" class="w-3.5 h-3.5"></i> Data Input
+                        </h3>
+                    </div>
+                    
+                    <div class="p-6 flex flex-col gap-6 h-full overflow-y-auto custom-scrollbar">
+                        
+                        <div class="space-y-3">
+                            <label class="text-xs font-semibold text-muted uppercase tracking-wider block">Plaintext Password</label>
+                            <div class="relative group">
+                                <input type="text" placeholder="Enter string..." value="supersecretpassword123" class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-xl text-primary font-mono outline-none focus:border-purple-500/50 transition-colors">
+                                <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                                    <button class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-muted hover:text-white transition-colors" title="Randomize"><i data-lucide="dices" class="w-4 h-4"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <label class="text-xs font-semibold text-muted uppercase tracking-wider block flex items-center justify-between">
+                                Cost Factor (Rounds)
+                                <span class="text-purple-400 font-mono text-[10px] bg-purple-500/10 px-2 py-0.5 rounded">10</span>
+                            </label>
+                            
+                            <div class="flex items-center gap-2 bg-black/40 p-1.5 rounded-xl border border-white/5">
+                                <button class="flex-1 py-2 text-xs font-medium text-muted hover:text-white rounded-lg transition-colors">08 Fast</button>
+                                <button class="flex-1 py-2 text-xs font-bold text-white bg-white/10 rounded-lg shadow-sm border border-white/10 transition-colors">10 Default</button>
+                                <button class="flex-1 py-2 text-xs font-medium text-muted hover:text-white rounded-lg transition-colors">12 Secure</button>
+                                <button class="flex-1 py-2 text-xs font-medium text-muted hover:text-white rounded-lg transition-colors">14 Slow</button>
+                            </div>
+                            <p class="text-[11px] text-muted/60 mt-1">Higher cost factors dramatically increase generation time.</p>
+                        </div>
+
+                        <div class="mt-auto pt-6 border-t border-white/5">
+                            <button class="w-full bg-purple-600 hover:bg-purple-500 text-white px-4 py-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors shadow-[0_0_30px_rgba(168,85,247,0.2)]">
+                                <i data-lucide="zap" class="w-4 h-4 text-white"></i> Generate Hash
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Pane: Hash Result & Verify -->
+                <div class="flex flex-col gap-6 h-full min-h-0">
+                    
+                    <!-- Result -->
+                    <div class="flex-1 glass-panel rounded-xl flex flex-col overflow-hidden border-purple-500/20">
+                        <div class="p-4 border-b border-white/5 bg-purple-500/5 flex items-center justify-between">
+                            <h3 class="text-xs font-semibold uppercase tracking-widest text-purple-400">Generated Hash</h3>
+                            <button class="text-xs flex items-center gap-1.5 text-muted hover:text-white transition-colors">
+                                <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy
+                            </button>
+                        </div>
+                        <div class="p-6 flex flex-col h-full justify-center relative group">
+                            <div class="font-mono text-xl md:text-2xl leading-relaxed break-all text-center">
+                                <span class="text-purple-400 select-none">$2a$10$</span><span class="text-primary">Dq0z/t03H.U6/lZq8Fk.zO.r4K4T6Tq0z/t03H.U6/lZq8Fk.zO.r4</span>
+                            </div>
+                            <div class="absolute bottom-4 right-6 flex items-center gap-4 text-[11px] font-mono">
+                                <span class="text-emerald-400 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> 84ms</span>
+                                <span class="text-muted border-l border-white/10 pl-4">Len: 60</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Verifier -->
+                    <div class="glass-panel rounded-xl flex flex-col overflow-hidden border-blue-500/20">
+                        <div class="p-4 border-b border-white/5 bg-blue-500/5 flex items-center justify-between">
+                            <h3 class="text-xs font-semibold uppercase tracking-widest text-blue-400">Verify Match</h3>
+                        </div>
+                        <div class="p-6 flex flex-col gap-4">
+                            <p class="text-xs text-muted leading-relaxed">Compare a plaintext string against an existing hash to see if they match.</p>
+                            
+                            <input type="text" placeholder="Paste hash to verify..." class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-primary font-mono outline-none focus:border-blue-500/50 transition-colors">
+                            
+                            <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex gap-3 mt-2">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+                                <div>
+                                    <p class="text-sm font-semibold text-emerald-400">Match Confirmed</p>
+                                    <p class="text-xs text-emerald-400/70 mt-1">The plaintext evaluates to this hash.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>
