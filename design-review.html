@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utiqx - Premium Design Concept</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        background: '#030303',
+                        surface: '#0a0a0a',
+                        border: '#1f1f22',
+                        primary: '#ededed',
+                        muted: '#878787'
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #000;
+            color: #ededed;
+        }
+        
+        /* Subtle mesh gradient background */
+        .app-bg {
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(20, 20, 20, 1) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(20, 20, 20, 1) 0%, transparent 50%);
+        }
+
+        .glass-card {
+            background: linear-gradient(145deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item {
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+    </style>
+</head>
+<body class="antialiased h-screen flex overflow-hidden app-bg selection:bg-white/20">
+
+    <!-- Sidebar -->
+    <aside class="w-64 border-r border-border bg-black/50 backdrop-blur-xl flex flex-col h-full z-20">
+        <!-- Logo -->
+        <div class="h-16 flex items-center px-6 border-b border-border/50">
+            <div class="w-7 h-7 bg-white rounded flex items-center justify-center mr-3 shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                <i data-lucide="command" class="w-4 h-4 text-black"></i>
+            </div>
+            <span class="font-bold tracking-tight text-lg">Utiqx</span>
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex-1 overflow-y-auto py-6 px-4 space-y-8 custom-scrollbar">
+            
+            <!-- Category: Overview -->
+            <div>
+                <p class="px-3 text-xs font-semibold text-muted uppercase tracking-wider mb-2">Overview</p>
+                <div class="space-y-1">
+                    <a href="#" class="nav-item active flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-primary font-medium">
+                        <i data-lucide="layout-grid" class="w-4 h-4 text-muted"></i>
+                        Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Category: Automations -->
+            <div>
+                <p class="px-3 text-xs font-semibold text-muted uppercase tracking-wider mb-2">Automations</p>
+                <div class="space-y-1">
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted font-medium group">
+                        <i data-lucide="clock" class="w-4 h-4 text-muted group-hover:text-primary transition-colors"></i>
+                        URL Scheduler
+                    </a>
+                    <a href="#" class="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-sm text-muted font-medium group">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="activity" class="w-4 h-4 text-muted group-hover:text-primary transition-colors"></i>
+                            API Monitors
+                        </div>
+                        <span class="text-[10px] py-0.5 px-2 bg-white/5 border border-white/10 rounded-full text-muted">Soon</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Category: Security -->
+            <div>
+                <p class="px-3 text-xs font-semibold text-muted uppercase tracking-wider mb-2">Security</p>
+                <div class="space-y-1">
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted font-medium group">
+                        <i data-lucide="key" class="w-4 h-4 text-muted group-hover:text-primary transition-colors"></i>
+                        JWT Generator
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted font-medium group">
+                        <i data-lucide="hash" class="w-4 h-4 text-muted group-hover:text-primary transition-colors"></i>
+                        Password Hasher
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Category: Dev Tools -->
+            <div>
+                <p class="px-3 text-xs font-semibold text-muted uppercase tracking-wider mb-2">Dev Tools</p>
+                <div class="space-y-1">
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted font-medium group">
+                        <i data-lucide="code-2" class="w-4 h-4 text-muted group-hover:text-primary transition-colors"></i>
+                        JSON Formatter
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted font-medium group">
+                        <i data-lucide="binary" class="w-4 h-4 text-muted group-hover:text-primary transition-colors"></i>
+                        Base64 Converter
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        
+        <!-- User Profile -->
+        <div class="p-4 border-t border-border/50">
+            <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-zinc-800 to-zinc-600 border border-white/10 flex items-center justify-center">
+                    <span class="text-xs font-medium text-white">US</span>
+                </div>
+                <div class="flex-1 overflow-hidden">
+                    <p class="text-sm font-medium text-primary truncate">User Settings</p>
+                    <p class="text-xs text-muted truncate">Manage account</p>
+                </div>
+                <i data-lucide="chevrons-up-down" class="w-4 h-4 text-muted"></i>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full relative z-10 overflow-hidden">
+        <!-- Topbar -->
+        <header class="h-16 flex items-center justify-between px-8 border-b border-white/[0.02] bg-transparent">
+            <div>
+                <!-- Breadcrumbs -->
+                <div class="flex items-center text-sm font-medium text-muted">
+                    <span class="hover:text-primary cursor-pointer transition-colors">Overview</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 mx-1 opacity-50"></i>
+                    <span class="text-primary">Dashboard</span>
+                </div>
+            </div>
+            
+            <!-- Search & Actions -->
+            <div class="flex items-center gap-4">
+                <div class="relative group">
+                    <i data-lucide="search" class="w-4 h-4 text-muted absolute left-3 top-1/2 -translate-y-1/2 group-focus-within:text-primary transition-colors"></i>
+                    <input type="text" placeholder="Search utilities... (⌘K)" class="w-64 bg-surface border border-border rounded-lg pl-9 pr-4 py-1.5 text-sm focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-white/20 transition-all placeholder:text-muted/70 text-primary">
+                </div>
+            </div>
+        </header>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+            <div class="max-w-6xl mx-auto space-y-8">
+                
+                <!-- Hero Section -->
+                <div>
+                    <h1 class="text-3xl font-semibold tracking-tight text-white mb-2">Welcome to Utiqx</h1>
+                    <p class="text-muted text-lg max-w-2xl">Your centralized hub for developer utilities. Select a tool below to get started.</p>
+                </div>
+
+                <!-- Bento Box Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- URL Scheduler Card (Large) -->
+                    <a href="#" class="glass-card rounded-[20px] p-6 flex flex-col group md:col-span-2 relative overflow-hidden">
+                        <!-- Subtle background glow on hover -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-purple-500/0 opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
+                        
+                        <div class="flex items-start justify-between mb-8 relative z-10">
+                            <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                                <i data-lucide="clock" class="w-6 h-6 text-primary"></i>
+                            </div>
+                            <div class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full text-xs font-medium flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                3 Active Tasks
+                            </div>
+                        </div>
+                        <div class="mt-auto relative z-10">
+                            <h3 class="text-xl font-semibold text-white mb-2 tracking-tight group-hover:text-blue-400 transition-colors">URL Scheduler</h3>
+                            <p class="text-muted text-sm leading-relaxed max-w-md">Automate API calls, test endpoints, and monitor uptime with precision cron jobs and custom headers.</p>
+                        </div>
+                        
+                        <!-- Decorative graphical element -->
+                        <div class="absolute right-0 bottom-0 translate-x-1/4 translate-y-1/4 opacity-10 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none">
+                            <i data-lucide="activity" class="w-64 h-64 text-white"></i>
+                        </div>
+                    </a>
+
+                    <!-- JWT Generator Card -->
+                    <a href="#" class="glass-card rounded-[20px] p-6 flex flex-col group relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/0 to-emerald-500/0 opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
+                        <div class="flex items-start justify-between mb-8 relative z-10">
+                            <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                                <i data-lucide="key" class="w-6 h-6 text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="mt-auto relative z-10">
+                            <h3 class="text-xl font-semibold text-white mb-2 tracking-tight group-hover:text-emerald-400 transition-colors">JWT Generator</h3>
+                            <p class="text-muted text-sm leading-relaxed">Sign and verify JSON Web Tokens instantly for testing authentication.</p>
+                        </div>
+                    </a>
+
+                    <!-- Password Hasher Card -->
+                    <a href="#" class="glass-card rounded-[20px] p-6 flex flex-col group relative overflow-hidden">
+                        <div class="flex items-start justify-between mb-8 relative z-10">
+                            <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                                <i data-lucide="hash" class="w-6 h-6 text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="mt-auto relative z-10">
+                            <h3 class="text-xl font-semibold text-white mb-2 tracking-tight group-hover:text-white transition-colors">Password Hasher</h3>
+                            <p class="text-muted text-sm leading-relaxed">Generate secure bcrypt hashes to manually seed testing databases.</p>
+                        </div>
+                    </a>
+
+                    <!-- JSON Formatter Card -->
+                    <a href="#" class="glass-card rounded-[20px] p-6 flex flex-col group relative overflow-hidden">
+                        <div class="flex items-start justify-between mb-8 relative z-10">
+                            <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                                <i data-lucide="code-2" class="w-6 h-6 text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="mt-auto relative z-10">
+                            <h3 class="text-xl font-semibold text-white mb-2 tracking-tight group-hover:text-white transition-colors">JSON Formatter</h3>
+                            <p class="text-muted text-sm leading-relaxed">Format, validate, and minify complex JSON payloads securely locally.</p>
+                        </div>
+                    </a>
+
+                    <!-- Base64 Converter Card -->
+                    <a href="#" class="glass-card rounded-[20px] p-6 flex flex-col group relative overflow-hidden">
+                        <div class="flex items-start justify-between mb-8 relative z-10">
+                            <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                                <i data-lucide="binary" class="w-6 h-6 text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="mt-auto relative z-10">
+                            <h3 class="text-xl font-semibold text-white mb-2 tracking-tight group-hover:text-white transition-colors">Base64 Encode/Decode</h3>
+                            <p class="text-muted text-sm leading-relaxed">Quickly encode strings to base64 or decode authorization headers.</p>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
