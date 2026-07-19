@@ -261,95 +261,41 @@
                         </div>
 
                         <div class="space-y-4">
-                            <!-- Job Card 1 (Detailed Wide Format) -->
-                            <div
-                                class="glass-card rounded-2xl p-5 border-l-2 border-l-orange-500 relative overflow-hidden">
-                                <!-- Top Row: Title, Badges, Actions -->
-                                <div class="flex items-center justify-between mb-3">
-                                    <div class="flex items-center gap-2 sm:gap-3">
+                            <!-- Job Card 1 (Simplified Format) -->
+                            <div class="glass-card rounded-2xl p-4 sm:p-5 border-l-2 border-l-orange-500 relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                
+                                <!-- Left Info Section -->
+                                <div>
+                                    <div class="flex items-center gap-2 sm:gap-3 mb-2">
                                         <div class="w-2 h-2 rounded-full bg-orange-500 animate-pulse shrink-0"></div>
-                                        <h3 class="text-lg font-bold text-white tracking-tight">RSPG</h3>
-                                        <span
-                                            class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-500/10 border border-green-500/20 text-green-400">GET</span>
-                                        <span
-                                            class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400">Active</span>
+                                        <h3 class="text-lg font-bold text-white tracking-tight">RSPG Health Check</h3>
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-500/10 border border-green-500/20 text-green-400">GET</span>
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400">Active</span>
                                     </div>
-
-                                    <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-                                        <button
-                                            class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium px-2 sm:px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors">
-                                            <i data-lucide="play" class="w-3.5 h-3.5"></i> <span
-                                                class="hidden sm:inline">Run Now</span>
-                                        </button>
-                                        <button
-                                            class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-muted hover:text-white transition-colors"
-                                            title="Detailed View">
-                                            <i data-lucide="file-text" class="w-4 h-4"></i>
-                                        </button>
-                                        <button
-                                            class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-muted hover:text-white transition-colors"
-                                            title="Edit">
-                                            <i data-lucide="pencil" class="w-4 h-4"></i>
-                                        </button>
-                                        <button
-                                            class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-muted hover:text-white transition-colors"
-                                            title="Pause">
-                                            <i data-lucide="pause" class="w-4 h-4"></i>
-                                        </button>
-                                        <button
-                                            class="w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 flex items-center justify-center transition-colors"
-                                            title="Delete">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                        </button>
+                                    <div class="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors ml-4 sm:ml-5">
+                                        <i data-lucide="link" class="w-3.5 h-3.5 shrink-0"></i>
+                                        <a href="#" class="underline-offset-4 hover:underline truncate max-w-[200px] sm:max-w-xs">https://rspg-api.onrender.com/health</a>
+                                    </div>
+                                    <div class="flex items-center gap-2 mt-2 ml-4 sm:ml-5">
+                                        <span class="px-2 py-0.5 bg-white/5 rounded text-xs text-muted font-mono">*/15 * * * *</span>
+                                        <span class="text-xs text-muted">•</span>
+                                        <span class="text-xs text-muted">Postman</span>
                                     </div>
                                 </div>
 
-                                <!-- URL Row -->
-                                <div
-                                    class="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors mb-4 ml-5">
-                                    <i data-lucide="link" class="w-3.5 h-3.5"></i>
-                                    <a href="#"
-                                        class="underline-offset-4 hover:underline truncate">https://rspg-api.onrender.com/health</a>
+                                <!-- Right Actions Section -->
+                                <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-4 sm:ml-0">
+                                    <button class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-muted hover:text-white transition-colors" title="Detailed View">
+                                        <i data-lucide="file-text" class="w-4 h-4"></i>
+                                    </button>
+                                    <button class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-muted hover:text-white transition-colors" title="Pause">
+                                        <i data-lucide="pause" class="w-4 h-4"></i>
+                                    </button>
+                                    <button class="w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 flex items-center justify-center transition-colors" title="Delete">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
                                 </div>
 
-                                <!-- Details Grid -->
-                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5 ml-5">
-                                    <div>
-                                        <p class="text-[10px] text-muted mb-1 uppercase tracking-wide">Schedule</p>
-                                        <p class="text-sm font-semibold text-white">Custom</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-[10px] text-muted mb-1 uppercase tracking-wide">Agent</p>
-                                        <div class="flex items-center gap-1.5">
-                                            <div class="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
-                                            <p class="text-sm font-semibold text-white">Postman</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p class="text-[10px] text-muted mb-1 uppercase tracking-wide">Headers</p>
-                                        <p class="text-sm font-semibold text-white">2 active • 2 total</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-[10px] text-muted mb-1 uppercase tracking-wide">Last Run</p>
-                                        <div class="flex items-center gap-1.5 text-emerald-400">
-                                            <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
-                                            <span class="text-xs font-medium">3 hours ago</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Footer Badges -->
-                                <div class="flex flex-wrap items-center gap-2 ml-5">
-                                    <span
-                                        class="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-muted">ID:
-                                        6a511629</span>
-                                    <span
-                                        class="px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-[10px] font-mono text-blue-300">Content-Type:
-                                        application/json</span>
-                                    <span
-                                        class="px-2 py-0.5 rounded-md bg-blue-500/10 border border-blue-500/20 text-[10px] font-mono text-blue-300">Accept:
-                                        application/json</span>
-                                </div>
                             </div>
                         </div>
 
@@ -361,35 +307,92 @@
 
     </main>
 
-    <!-- Detailed View Modal Mockup (Hidden by default, remove 'hidden' to view) -->
-    <div class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <!-- Detailed View Modal Mockup (Visible for review) -->
+    <div class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div
             class="bg-[#0a0a0a] border border-white/10 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[80vh]">
             <div class="flex items-center justify-between px-6 py-4 border-b border-white/5">
                 <div class="flex items-center gap-3">
                     <h2 class="text-lg font-semibold text-white">Detailed View: RSPG</h2>
-                    <span
-                        class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-500/10 border border-green-500/20 text-green-400">GET</span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-500/10 border border-green-500/20 text-green-400">GET</span>
                 </div>
-                <button class="text-muted hover:text-white p-1 transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
+                <div class="flex items-center gap-3">
+                    <button class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors">
+                        <i data-lucide="play" class="w-3.5 h-3.5"></i> Run Now
+                    </button>
+                    <button class="bg-white/5 hover:bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors">
+                        <i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit Job
+                    </button>
+                    <div class="w-px h-4 bg-white/10 mx-1"></div>
+                    <button onclick="this.closest('.fixed').style.display='none'" class="text-muted hover:text-white p-1 transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
             </div>
-            <div class="p-6 overflow-y-auto">
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div class="bg-white/[0.02] p-4 rounded-xl border border-white/5">
-                        <p class="text-xs text-muted mb-1 uppercase tracking-wide">Target URL</p>
-                        <p class="text-sm font-mono text-blue-400 truncate">https://rspg-api.onrender.com/health</p>
-                    </div>
-                    <div class="bg-white/[0.02] p-4 rounded-xl border border-white/5">
-                        <p class="text-xs text-muted mb-1 uppercase tracking-wide">Cron Schedule</p>
-                        <p class="text-sm font-mono text-white">*/15 * * * *</p>
+            <div class="p-6 overflow-y-auto custom-scrollbar">
+                
+                <!-- Sleek Minimalist Details -->
+                <div class="mb-6">
+                    <p class="text-[10px] text-muted mb-1.5 uppercase tracking-wide pl-1">Target Endpoint</p>
+                    <div class="flex items-center gap-3 bg-black/40 border border-white/5 p-3.5 rounded-xl">
+                        <span class="px-2 py-1 rounded text-[10px] font-bold bg-green-500/10 border border-green-500/20 text-green-400 shrink-0">GET</span>
+                        <a href="#" class="font-mono text-sm text-blue-400 hover:text-blue-300 truncate block">https://rspg-api.onrender.com/health</a>
                     </div>
                 </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-8 px-1">
+                    <div>
+                        <p class="text-[10px] text-muted mb-1.5 uppercase tracking-wide flex items-center gap-1.5">
+                            <i data-lucide="clock" class="w-3 h-3 shrink-0"></i> Schedule
+                        </p>
+                        <p class="text-sm font-semibold text-white">*/15 * * * *</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-muted mb-1.5 uppercase tracking-wide flex items-center gap-1.5">
+                            <i data-lucide="terminal" class="w-3 h-3 shrink-0"></i> Agent
+                        </p>
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></div>
+                            <p class="text-sm font-semibold text-white truncate">Postman</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-muted mb-1.5 uppercase tracking-wide flex items-center gap-1.5">
+                            <i data-lucide="hash" class="w-3 h-3 shrink-0"></i> Job ID
+                        </p>
+                        <p class="text-sm font-mono text-white truncate">6a511629</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-muted mb-1.5 uppercase tracking-wide flex items-center gap-1.5">
+                            <i data-lucide="check-circle-2" class="w-3 h-3 shrink-0"></i> Last Run
+                        </p>
+                        <p class="text-sm font-semibold text-emerald-400 truncate">3 hours ago</p>
+                    </div>
+                </div>
+
+                <div class="mb-8 px-1">
+                    <p class="text-[10px] text-muted mb-2.5 uppercase tracking-wide">Request Headers</p>
+                    <div class="bg-black/50 border border-white/5 rounded-xl p-4 font-mono text-xs overflow-x-auto custom-scrollbar">
+                        <div class="text-white">{</div>
+                        <div class="ml-4">
+                            <span class="text-blue-300">"Content-Type"</span><span class="text-white">: </span><span class="text-green-400">"application/json"</span><span class="text-white">,</span>
+                        </div>
+                        <div class="ml-4">
+                            <span class="text-blue-300">"Accept"</span><span class="text-white">: </span><span class="text-green-400">"application/json"</span>
+                        </div>
+                        <div class="text-white">}</div>
+                    </div>
+                </div>
+
+                <!-- Execution Logs -->
                 <div>
-                    <h3 class="text-sm font-semibold text-white mb-3">Execution Logs</h3>
-                    <div
-                        class="bg-black border border-white/10 rounded-xl p-4 h-64 overflow-y-auto font-mono text-xs space-y-2">
+                    <div class="flex items-center justify-between mb-3 px-1">
+                        <h3 class="text-sm font-semibold text-white">Execution Logs</h3>
+                        <button class="text-[10px] text-muted hover:text-white uppercase tracking-wide flex items-center gap-1 transition-colors">
+                            <i data-lucide="refresh-cw" class="w-3 h-3"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="bg-black border border-white/10 rounded-xl p-4 h-64 overflow-y-auto font-mono text-xs space-y-2 custom-scrollbar">
                         <div class="text-green-400">[2026-07-11 14:00:00] SUCCESS: 200 OK - Response Time: 124ms</div>
                         <div class="text-muted">{ "status": "healthy", "uptime": 342991 }</div>
                         <div class="border-b border-white/5 my-2"></div>

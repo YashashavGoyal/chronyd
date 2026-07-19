@@ -67,8 +67,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div>
               <p className="px-3 text-xs font-semibold text-muted uppercase tracking-wider mb-2">Automations</p>
               <div className="space-y-1">
-                  <Link href="/dashboard/cron" onClick={() => setIsMobileOpen(false)} className={`nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium ${pathname === "/dashboard/cron" ? "active" : "text-muted group"}`}>
-                      <Clock className={`w-4 h-4 ${pathname === "/dashboard/cron" ? "text-primary" : "text-muted group-hover:text-primary transition-colors"}`} />
+                  <Link href="/dashboard/chronyd" onClick={() => setIsMobileOpen(false)} className={`nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium ${pathname === "/dashboard/chronyd" ? "active" : "text-muted group"}`}>
+                      <Clock className={`w-4 h-4 ${pathname === "/dashboard/chronyd" ? "text-primary" : "text-muted group-hover:text-primary transition-colors"}`} />
                       URL Scheduler
                   </Link>
                   <div className="nav-item flex items-center justify-between px-3 py-2 rounded-lg text-sm text-muted font-medium group pointer-events-none opacity-50">
@@ -133,13 +133,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="antialiased h-screen flex overflow-hidden app-bg selection:bg-white/20 font-sans">
       
       {/* Desktop Sidebar */}
-      <aside className="w-64 border-r border-border bg-black/50 backdrop-blur-xl flex-col h-full z-20 hidden md:flex">
+      <aside className="w-64 border-r border-border bg-black/50 backdrop-blur-xl flex-col h-full hidden md:flex">
           <SidebarContent />
       </aside>
 
       {/* Mobile Sidebar Overlay */}
       <div 
-        className={`md:hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`md:hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm transition-opacity duration-300 ${
           isMobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setIsMobileOpen(false)}
@@ -155,9 +155,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col h-full relative z-10 overflow-hidden">
+      <main className="flex-1 flex flex-col h-full relative overflow-hidden">
           {/* Topbar */}
-          <header className="h-16 flex items-center justify-between px-4 sm:px-8 border-b border-white/[0.02] bg-transparent">
+          <header className="h-16 flex items-center justify-between px-4 sm:px-8 border-b border-white/[0.02] bg-transparent z-10">
               <div className="flex items-center gap-4">
                   {/* Hamburger Menu (Mobile) */}
                   <button 

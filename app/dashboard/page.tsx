@@ -14,7 +14,7 @@ export default function DashboardOverview() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
         {/* URL Scheduler Card (Large) */}
-        <Link href="/dashboard/cron" className="glass-card rounded-[20px] p-6 flex flex-col group md:col-span-2 relative overflow-hidden">
+        <Link href="/dashboard/chronyd" className="glass-card rounded-[20px] p-6 flex flex-col group md:col-span-2 relative overflow-hidden">
           {/* Subtle background glow on hover */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-purple-500/0 opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
           
