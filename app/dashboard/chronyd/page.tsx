@@ -1,17 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  PlusCircle, 
-  Play, 
-  Plus, 
-  Trash2, 
-  FileText, 
-  Pencil, 
-  Pause, 
-  Link as LinkIcon, 
-  CheckCircle2, 
-  X, 
+import {
+  PlusCircle,
+  Play,
+  Plus,
+  Trash2,
+  FileText,
+  Pencil,
+  Pause,
+  Link as LinkIcon,
+  CheckCircle2,
+  X,
   AlertTriangle,
   Terminal,
   Hash,
@@ -59,36 +59,36 @@ const initialJobs: Job[] = [
 ];
 
 // Custom Select Component for Premium UI
-const CustomSelect = ({ 
-  label, 
-  value, 
-  onChange, 
-  options 
-}: { 
-  label: string, 
-  value: string, 
-  onChange: (val: string) => void, 
-  options: string[] 
+const CustomSelect = ({
+  label,
+  value,
+  onChange,
+  options
+}: {
+  label: string,
+  value: string,
+  onChange: (val: string) => void,
+  options: string[]
 }) => {
   const [open, setOpen] = useState(false);
   return (
     <div className="relative">
       <label className="block text-[9px] sm:text-[10px] font-medium text-muted mb-1.5 uppercase tracking-wide">{label}</label>
-      <div 
+      <div
         className="input-field w-full rounded-xl px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm text-white flex justify-between items-center cursor-pointer select-none"
         onClick={() => setOpen(!open)}
       >
         <span>{value}</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-muted transition-transform ${open ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-muted transition-transform ${open ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6" /></svg>
       </div>
-      
+
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)}></div>
           <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-[#161616] border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-100">
             {options.map(opt => (
-              <div 
-                key={opt} 
+              <div
+                key={opt}
                 className={`px-3 py-2 sm:py-2.5 text-xs sm:text-sm cursor-pointer transition-colors ${opt === value ? 'bg-white/10 text-white font-medium' : 'text-neutral-300 hover:bg-white/5 hover:text-white'}`}
                 onClick={() => { onChange(opt); setOpen(false); }}
               >
@@ -102,20 +102,20 @@ const CustomSelect = ({
   );
 };
 
-const LogItem = ({ 
-  timestamp, 
-  status, 
-  time, 
-  requestBody, 
+const LogItem = ({
+  timestamp,
+  status,
+  time,
+  requestBody,
   responseBody,
   requestHeaders,
   responseHeaders,
   isSuccess
-}: { 
-  timestamp: string, 
-  status: string, 
-  time: string, 
-  requestBody: string, 
+}: {
+  timestamp: string,
+  status: string,
+  time: string,
+  requestBody: string,
   responseBody: string,
   requestHeaders?: string,
   responseHeaders?: string,
@@ -123,64 +123,64 @@ const LogItem = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [showHeaders, setShowHeaders] = useState(false);
-  
+
   return (
     <div className="border-b border-white/5 last:border-0 pb-3 mb-3 last:pb-0 last:mb-0">
-      <div 
+      <div
         className="cursor-pointer flex flex-col gap-1.5 group"
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-start justify-between gap-2">
-            <div className={`${isSuccess ? 'text-green-400' : 'text-red-400'} font-medium`}>
-              [{timestamp}] {isSuccess ? 'SUCCESS' : 'ERROR'}: {status} - Response Time: {time}
-            </div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-muted shrink-0 mt-0.5 transition-transform ${expanded ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6"/></svg>
+          <div className={`${isSuccess ? 'text-green-400' : 'text-red-400'} font-medium`}>
+            [{timestamp}] {isSuccess ? 'SUCCESS' : 'ERROR'}: {status} - Response Time: {time}
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-muted shrink-0 mt-0.5 transition-transform ${expanded ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6" /></svg>
         </div>
-        
-        {!expanded ? (
-           <div className="text-muted truncate opacity-80 group-hover:opacity-100 transition-opacity">{responseBody}</div>
-        ) : (
-           <div className="mt-2 space-y-3 cursor-text" onClick={e => e.stopPropagation()}>
-              
-              <div className="flex justify-end">
-                 <button 
-                   onClick={(e) => { e.stopPropagation(); setShowHeaders(!showHeaders); }} 
-                   className="text-[10px] bg-white/5 hover:bg-white/10 border border-white/10 text-muted hover:text-white px-2.5 py-1 rounded-md transition-colors"
-                 >
-                   {showHeaders ? 'Hide Headers' : 'Show Headers'}
-                 </button>
-              </div>
 
-              {showHeaders && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 animate-in fade-in zoom-in-95 duration-200">
-                  <div>
-                      <div className="text-[10px] text-muted/70 mb-1 uppercase tracking-wider font-sans">Request Headers</div>
-                      <div className="bg-black/50 border border-white/5 p-2.5 rounded-lg overflow-x-auto custom-scrollbar">
-                        <pre className="text-purple-300/90 text-[10px]">{requestHeaders || "{}"}</pre>
-                      </div>
-                  </div>
-                  <div>
-                      <div className="text-[10px] text-muted/70 mb-1 uppercase tracking-wider font-sans">Response Headers</div>
-                      <div className="bg-black/50 border border-white/5 p-2.5 rounded-lg overflow-x-auto custom-scrollbar">
-                        <pre className="text-emerald-300/90 text-[10px]">{responseHeaders || "{}"}</pre>
-                      </div>
+        {!expanded ? (
+          <div className="text-muted truncate opacity-80 group-hover:opacity-100 transition-opacity">{responseBody}</div>
+        ) : (
+          <div className="mt-2 space-y-3 cursor-text" onClick={e => e.stopPropagation()}>
+
+            <div className="flex justify-end">
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowHeaders(!showHeaders); }}
+                className="text-[10px] bg-white/5 hover:bg-white/10 border border-white/10 text-muted hover:text-white px-2.5 py-1 rounded-md transition-colors"
+              >
+                {showHeaders ? 'Hide Headers' : 'Show Headers'}
+              </button>
+            </div>
+
+            {showHeaders && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 animate-in fade-in zoom-in-95 duration-200">
+                <div>
+                  <div className="text-[10px] text-muted/70 mb-1 uppercase tracking-wider font-sans">Request Headers</div>
+                  <div className="bg-black/50 border border-white/5 p-2.5 rounded-lg overflow-x-auto custom-scrollbar">
+                    <pre className="text-purple-300/90 text-[10px]">{requestHeaders || "{}"}</pre>
                   </div>
                 </div>
-              )}
+                <div>
+                  <div className="text-[10px] text-muted/70 mb-1 uppercase tracking-wider font-sans">Response Headers</div>
+                  <div className="bg-black/50 border border-white/5 p-2.5 rounded-lg overflow-x-auto custom-scrollbar">
+                    <pre className="text-emerald-300/90 text-[10px]">{responseHeaders || "{}"}</pre>
+                  </div>
+                </div>
+              </div>
+            )}
 
-              <div>
-                  <div className="text-[10px] text-muted/70 mb-1 uppercase tracking-wider font-sans">Request Body</div>
-                  <div className="bg-black/50 border border-white/5 p-2.5 rounded-lg overflow-x-auto custom-scrollbar">
-                    <pre className="text-blue-300/90">{requestBody || "Empty body"}</pre>
-                  </div>
+            <div>
+              <div className="text-[10px] text-muted/70 mb-1 uppercase tracking-wider font-sans">Request Body</div>
+              <div className="bg-black/50 border border-white/5 p-2.5 rounded-lg overflow-x-auto custom-scrollbar">
+                <pre className="text-blue-300/90">{requestBody || "Empty body"}</pre>
               </div>
-              <div>
-                  <div className="text-[10px] text-muted/70 mb-1 uppercase tracking-wider font-sans">Response Body</div>
-                  <div className="bg-black/50 border border-white/5 p-2.5 rounded-lg overflow-x-auto custom-scrollbar">
-                    <pre className="text-muted whitespace-pre-wrap break-all">{responseBody}</pre>
-                  </div>
+            </div>
+            <div>
+              <div className="text-[10px] text-muted/70 mb-1 uppercase tracking-wider font-sans">Response Body</div>
+              <div className="bg-black/50 border border-white/5 p-2.5 rounded-lg overflow-x-auto custom-scrollbar">
+                <pre className="text-muted whitespace-pre-wrap break-all">{responseBody}</pre>
               </div>
-           </div>
+            </div>
+          </div>
         )}
       </div>
     </div>
@@ -188,7 +188,7 @@ const LogItem = ({
 };
 
 const getMethodStyle = (method: string) => {
-  switch(method) {
+  switch (method) {
     case 'GET': return 'bg-green-500/10 border-green-500/20 text-green-400';
     case 'POST': return 'bg-blue-500/10 border-blue-500/20 text-blue-400';
     case 'DELETE': return 'bg-red-500/10 border-red-500/20 text-red-400';
@@ -200,9 +200,51 @@ const getMethodStyle = (method: string) => {
   }
 };
 
+const validateCron = (cronStr: string): string | null => {
+  const cron = cronStr.trim();
+
+  // 1. Check for standard @ macros
+  const validMacros = ['@yearly', '@annually', '@monthly', '@weekly', '@daily', '@midnight', '@hourly'];
+  if (validMacros.includes(cron)) {
+    return null; // Valid!
+  }
+
+  // 2. Character Allowlist
+  if (!/^[0-9*/,\- ]+$/.test(cron)) {
+    return "Cron contains invalid characters. Only numbers, *, /, -, and commas are allowed.";
+  }
+
+  // 3. No double spaces
+  if (/\s{2,}/.test(cron)) {
+    return "Cron contains extra spaces. Please use exactly one space between parts.";
+  }
+
+  // 4. Exactly 5 parts
+  const parts = cron.split(" ");
+  if (parts.length !== 5) {
+    return "Invalid cron expression. Must have exactly 5 parts (Minute Hour Day Month Weekday).";
+  }
+
+  // 5. Anti-Spam: Block every minute
+  if (cron === "* * * * *" || cron === "*/1 * * * *" || cron === "*/2 * * * *" || cron === "*/3 * * * *" || cron === "*/4 * * * *") {
+    return "Running every minute is not allowed. Please use a longer interval (e.g., */5 * * * *).";
+  }
+
+  // 6. No dangling slashes
+  for (const part of parts) {
+    if (part.startsWith("/") || part.endsWith("/") || part === "*/") {
+      return "Cron contains invalid step formatting (e.g., dangling slashes).";
+    }
+  }
+
+  // TODO (Backend): When the backend service is created, validate this string mathematically using the 'cron-parser' NPM package.
+
+  return null; // Passes all frontend checks
+};
+
 export default function ChronydPage() {
   const [jobs, setJobs] = useState<Job[]>(initialJobs);
-  
+
   // Shared Form State (Used for both Create and Edit)
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -211,7 +253,7 @@ export default function ChronydPage() {
   const [url, setUrl] = useState("");
   const [cron, setCron] = useState("*/5 * * * *");
   const [payload, setPayload] = useState("");
-  
+
   // Headers State
   const [headerMode, setHeaderMode] = useState<"kv" | "json">("kv");
   const [headersKV, setHeadersKV] = useState<HeaderKV[]>([
@@ -224,11 +266,12 @@ export default function ChronydPage() {
   const [jobToDelete, setJobToDelete] = useState<Job | null>(null);
   const [isModalEditing, setIsModalEditing] = useState(false);
   const [manualBodyEnabled, setManualBodyEnabled] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   // Handlers
   const handleHeaderModeSwitch = (mode: "kv" | "json") => {
     if (mode === headerMode) return;
-    
+
     if (mode === "json") {
       const jsonObj: Record<string, string> = {};
       headersKV.filter(h => h.enabled && h.key).forEach(h => {
@@ -279,6 +322,7 @@ export default function ChronydPage() {
     setHeadersKV([{ id: Date.now().toString(), key: "Content-Type", value: "application/json", enabled: true }]);
     setHeadersJSON("");
     setManualBodyEnabled(false);
+    setFormError(null);
   };
 
   const handleEdit = (job: Job) => {
@@ -293,15 +337,56 @@ export default function ChronydPage() {
     setHeadersKV(job.headersKV);
     setHeadersJSON(job.headersJSON);
     setManualBodyEnabled(!!job.payload);
+    setFormError(null);
   };
 
   const handleSubmit = (e: React.FormEvent, isEdit: boolean) => {
     e.preventDefault();
-    if (!name || !url) return;
+    setFormError(null);
+
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+      setFormError("Job name is required.");
+      return;
+    }
+
+    try {
+      const parsedUrl = new URL(url);
+      if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+        throw new Error();
+      }
+    } catch {
+      setFormError("Please enter a valid HTTP/HTTPS URL.");
+      return;
+    }
+
+    const cronError = validateCron(cron);
+    if (cronError) {
+      setFormError(cronError);
+      return;
+    }
+
+    if ((["POST", "PUT", "PATCH"].includes(method) || manualBodyEnabled) && payload.trim()) {
+      try {
+        JSON.parse(payload);
+      } catch {
+        setFormError("Body Payload must be valid JSON.");
+        return;
+      }
+    }
+
+    if (headerMode === "json" && headersJSON.trim()) {
+      try {
+        JSON.parse(headersJSON);
+      } catch {
+        setFormError("Headers must be valid JSON.");
+        return;
+      }
+    }
 
     // Reset payload to empty if method doesn't support it or if it was not manually enabled
-    const finalPayload = method === "HEAD" ? "" : 
-                         (["GET", "DELETE", "OPTIONS"].includes(method) && !manualBodyEnabled) ? "" : payload;
+    const finalPayload = method === "HEAD" ? "" :
+      (["GET", "DELETE", "OPTIONS"].includes(method) && !manualBodyEnabled) ? "" : payload;
 
     const newJob: Job = {
       id: isEdit && editingId ? editingId : Math.random().toString(36).substr(2, 8),
@@ -352,83 +437,84 @@ export default function ChronydPage() {
     <form onSubmit={(e) => handleSubmit(e, isEdit)} className="space-y-4 sm:space-y-5">
       {/* Name */}
       <div>
-          <label className="block text-[9px] sm:text-[10px] font-medium text-muted mb-1 sm:mb-1.5 uppercase tracking-wide">Job Name</label>
-          <input required type="text" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Health Check Sync" className="input-field w-full rounded-xl px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm text-white placeholder:text-muted/50" />
+        <label className="block text-[9px] sm:text-[10px] font-medium text-muted mb-1 sm:mb-1.5 uppercase tracking-wide">Job Name</label>
+        <input required type="text" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Health Check Sync" className="input-field w-full rounded-xl px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm text-white placeholder:text-muted/50" />
       </div>
 
       {/* Agent & Method */}
       <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1">
-              <CustomSelect 
-                  label="Agent" 
-                  value={agent} 
-                  onChange={setAgent} 
-                  options={["Postman", "Curl", "Browser"]} 
-              />
-          </div>
-          <div className="w-full sm:w-28 shrink-0">
-              <CustomSelect 
-                  label="Method" 
-                  value={method} 
-                  onChange={setMethod} 
-                  options={["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]} 
-              />
-          </div>
+        <div className="flex-1">
+          <CustomSelect
+            label="Agent"
+            value={agent}
+            onChange={setAgent}
+            options={["Postman", "Curl", "Browser"]}
+          />
+        </div>
+        <div className="w-full sm:w-28 shrink-0">
+          <CustomSelect
+            label="Method"
+            value={method}
+            onChange={setMethod}
+            options={["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]}
+          />
+        </div>
       </div>
 
       {/* Target URL */}
       <div>
-          <label className="block text-[9px] sm:text-[10px] font-medium text-muted mb-1 sm:mb-1.5 uppercase tracking-wide">Target URL</label>
-          <input required type="url" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://api.example.com/sync" className="input-field w-full rounded-xl px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm text-white placeholder:text-muted/50" />
+        <label className="block text-[9px] sm:text-[10px] font-medium text-muted mb-1 sm:mb-1.5 uppercase tracking-wide">Target URL</label>
+        <input required type="url" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://api.example.com/sync" className="input-field w-full rounded-xl px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm text-white placeholder:text-muted/50" />
       </div>
 
       {/* Cron Expression */}
       <div>
-          <label className="block text-[9px] sm:text-[10px] font-medium text-muted mb-1 sm:mb-1.5 uppercase tracking-wide flex items-center gap-2">
-              Cron Schedule
-          </label>
-          <input required type="text" value={cron} onChange={e => setCron(e.target.value)} placeholder="*/5 * * * *" className="input-field w-full rounded-xl px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm text-white font-mono placeholder:text-muted/50" />
+        <label className="flex items-center gap-2 text-[9px] sm:text-[10px] font-medium text-muted mb-1 sm:mb-1.5 uppercase tracking-wide">
+          Cron Schedule
+          <span className="px-2 py-0.5 rounded text-[10px] bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono normal-case tracking-normal">Minute Hour Day Month Weekday</span>
+        </label>
+        <input required type="text" value={cron} onChange={e => setCron(e.target.value)} placeholder="*/5 * * * *" className="input-field w-full rounded-xl px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm text-white font-mono placeholder:text-muted/50" />
       </div>
 
       {/* Tabs for Headers */}
       <div>
-          <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-[9px] sm:text-[10px] font-medium text-muted uppercase tracking-wide">Headers</label>
-              <div className="flex items-center gap-1 bg-black/50 p-1 rounded-lg border border-white/5">
-                  <button type="button" onClick={() => handleHeaderModeSwitch("kv")} className={`px-2 py-0.5 text-[9px] sm:text-[10px] font-medium rounded-md transition-colors ${headerMode === "kv" ? "bg-white/10 text-white" : "text-muted hover:text-white"}`}>Key-Value</button>
-                  <button type="button" onClick={() => handleHeaderModeSwitch("json")} className={`px-2 py-0.5 text-[9px] sm:text-[10px] font-medium rounded-md transition-colors ${headerMode === "json" ? "bg-white/10 text-white" : "text-muted hover:text-white"}`}>JSON</button>
-              </div>
+        <div className="flex items-center justify-between mb-1.5">
+          <label className="block text-[9px] sm:text-[10px] font-medium text-muted uppercase tracking-wide">Headers</label>
+          <div className="flex items-center gap-1 bg-black/50 p-1 rounded-lg border border-white/5">
+            <button type="button" onClick={() => handleHeaderModeSwitch("kv")} className={`px-2 py-0.5 text-[9px] sm:text-[10px] font-medium rounded-md transition-colors ${headerMode === "kv" ? "bg-white/10 text-white" : "text-muted hover:text-white"}`}>Key-Value</button>
+            <button type="button" onClick={() => handleHeaderModeSwitch("json")} className={`px-2 py-0.5 text-[9px] sm:text-[10px] font-medium rounded-md transition-colors ${headerMode === "json" ? "bg-white/10 text-white" : "text-muted hover:text-white"}`}>JSON</button>
           </div>
-          
-          {headerMode === "kv" ? (
-            <div className="space-y-2 mt-2">
-                <div className="flex items-center justify-between gap-3 mb-3">
-                    <p className="text-xs text-muted leading-tight">Headers will be included in the request</p>
-                    <button type="button" onClick={addKVHeader} className="text-xs font-medium bg-blue-600 hover:bg-blue-500 text-white px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0 shadow-sm">
-                        <Plus className="w-3.5 h-3.5" /> Add Header
-                    </button>
+        </div>
+
+        {headerMode === "kv" ? (
+          <div className="space-y-2 mt-2">
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <p className="text-xs text-muted leading-tight">Headers will be included in the request</p>
+              <button type="button" onClick={addKVHeader} className="text-xs font-medium bg-blue-600 hover:bg-blue-500 text-white px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0 shadow-sm">
+                <Plus className="w-3.5 h-3.5" /> Add Header
+              </button>
+            </div>
+
+            {headersKV.map(h => (
+              <div key={h.id} className="flex items-center gap-2 bg-white/[0.02] border border-white/[0.05] p-2 rounded-xl">
+                <input type="text" value={h.key} onChange={e => updateKVHeader(h.id, 'key', e.target.value)} placeholder="Key" className="input-field w-1/3 min-w-[60px] rounded-lg px-2.5 py-1.5 text-xs text-white placeholder:text-muted/50" />
+                <input type="text" value={h.value} onChange={e => updateKVHeader(h.id, 'value', e.target.value)} placeholder="Value" className="input-field flex-1 min-w-[60px] rounded-lg px-2.5 py-1.5 text-xs text-white placeholder:text-muted/50" />
+                <div className="flex items-center gap-2 shrink-0 pl-1">
+                  <label className="flex items-center cursor-pointer">
+                    <input type="checkbox" checked={h.enabled} onChange={e => updateKVHeader(h.id, 'enabled', e.target.checked)} className="rounded border-white/20 bg-black/50 text-blue-500 focus:ring-blue-500 w-4 h-4 cursor-pointer" />
+                  </label>
+                  <button type="button" onClick={() => removeKVHeader(h.id)} className="text-red-400/70 hover:text-red-400 p-1 transition-colors">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
-                
-                {headersKV.map(h => (
-                  <div key={h.id} className="flex items-center gap-2 bg-white/[0.02] border border-white/[0.05] p-2 rounded-xl">
-                      <input type="text" value={h.key} onChange={e => updateKVHeader(h.id, 'key', e.target.value)} placeholder="Key" className="input-field w-1/3 min-w-[60px] rounded-lg px-2.5 py-1.5 text-xs text-white placeholder:text-muted/50" />
-                      <input type="text" value={h.value} onChange={e => updateKVHeader(h.id, 'value', e.target.value)} placeholder="Value" className="input-field flex-1 min-w-[60px] rounded-lg px-2.5 py-1.5 text-xs text-white placeholder:text-muted/50" />
-                      <div className="flex items-center gap-2 shrink-0 pl-1">
-                          <label className="flex items-center cursor-pointer">
-                              <input type="checkbox" checked={h.enabled} onChange={e => updateKVHeader(h.id, 'enabled', e.target.checked)} className="rounded border-white/20 bg-black/50 text-blue-500 focus:ring-blue-500 w-4 h-4 cursor-pointer" />
-                          </label>
-                          <button type="button" onClick={() => removeKVHeader(h.id)} className="text-red-400/70 hover:text-red-400 p-1 transition-colors">
-                              <Trash2 className="w-4 h-4" />
-                          </button>
-                      </div>
-                  </div>
-                ))}
-            </div>
-          ) : (
-            <div className="pt-2">
-                <textarea rows={4} value={headersJSON} onChange={e => setHeadersJSON(e.target.value)} placeholder='{"Authorization": "Bearer token..."}' className="input-field w-full rounded-xl px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm text-white font-mono placeholder:text-muted/50 resize-none custom-scrollbar"></textarea>
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="pt-2">
+            <textarea rows={4} value={headersJSON} onChange={e => setHeadersJSON(e.target.value)} placeholder='{"Authorization": "Bearer token..."}' className="input-field w-full rounded-xl px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm text-white font-mono placeholder:text-muted/50 resize-none custom-scrollbar"></textarea>
+          </div>
+        )}
       </div>
 
       {/* Payload Section */}
@@ -437,120 +523,127 @@ export default function ChronydPage() {
           {(["POST", "PUT", "PATCH"].includes(method) || manualBodyEnabled) ? (
             <>
               <div className="flex items-center justify-between mb-1 sm:mb-1.5">
-                  <label className="block text-[9px] sm:text-[10px] font-medium text-muted uppercase tracking-wide">Body Payload (Optional JSON)</label>
-                  {["GET", "DELETE", "OPTIONS"].includes(method) && (
-                      <button type="button" onClick={() => { setManualBodyEnabled(false); setPayload(""); }} className="text-[9px] text-red-400 hover:text-red-300">Remove Body</button>
-                  )}
+                <label className="block text-[9px] sm:text-[10px] font-medium text-muted uppercase tracking-wide">Body Payload (Optional JSON)</label>
+                {["GET", "DELETE", "OPTIONS"].includes(method) && (
+                  <button type="button" onClick={() => { setManualBodyEnabled(false); setPayload(""); }} className="text-[9px] text-red-400 hover:text-red-300">Remove Body</button>
+                )}
               </div>
               <textarea rows={3} value={payload} onChange={e => setPayload(e.target.value)} placeholder='{"action": "sync", "force": true}' className="input-field w-full rounded-xl px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm text-white font-mono placeholder:text-muted/50 resize-none custom-scrollbar"></textarea>
             </>
           ) : (
-             <button type="button" onClick={() => setManualBodyEnabled(true)} className="w-full py-2 border border-dashed border-white/10 rounded-xl text-[10px] sm:text-xs text-muted hover:text-white hover:border-white/30 transition-colors">
-                 + Add Body Payload
-             </button>
+            <button type="button" onClick={() => setManualBodyEnabled(true)} className="w-full py-2 border border-dashed border-white/10 rounded-xl text-[10px] sm:text-xs text-muted hover:text-white hover:border-white/30 transition-colors">
+              + Add Body Payload
+            </button>
           )}
+        </div>
+      )}
+
+      {formError && (
+        <div className="text-red-400 bg-red-500/10 border border-red-500/20 px-3 py-2.5 rounded-lg text-xs flex items-center gap-2 animate-in fade-in zoom-in-95 duration-200">
+          <AlertTriangle className="w-4 h-4 shrink-0" />
+          <span>{formError}</span>
         </div>
       )}
 
       {/* Submit Footer */}
       <div className="pt-3 sm:pt-4 border-t border-white/5">
-          <button type="submit" className={`w-full font-semibold rounded-xl px-4 py-2.5 sm:py-3 text-xs sm:text-sm transition-colors flex items-center justify-center gap-2 ${isEdit ? 'bg-blue-600 text-white hover:bg-blue-500' : 'bg-white text-black hover:bg-neutral-200'}`}>
-              {isEdit ? <Pencil className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
-              {isEdit ? "Save Changes" : "Schedule Job"}
-          </button>
+        <button type="submit" className={`w-full font-semibold rounded-xl px-4 py-2.5 sm:py-3 text-xs sm:text-sm transition-colors flex items-center justify-center gap-2 ${isEdit ? 'bg-blue-600 text-white hover:bg-blue-500' : 'bg-white text-black hover:bg-neutral-200'}`}>
+          {isEdit ? <Pencil className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+          {isEdit ? "Save Changes" : "Schedule Job"}
+        </button>
       </div>
     </form>
   );
 
   return (
     <div className="max-w-[1400px] mx-auto pb-24">
-      
+
       {/* Page Header */}
       <div className="flex items-center justify-between mb-8">
-          <div>
-              <h1 className="text-3xl font-semibold tracking-tight text-white mb-2">Chronyd Tasks</h1>
-              <p className="text-muted text-lg max-w-2xl">Automate your API calls with precise cron expressions.</p>
-          </div>
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight text-white mb-2">Chronyd Tasks</h1>
+          <p className="text-muted text-lg max-w-2xl">Automate your API calls with precise cron expressions.</p>
+        </div>
       </div>
 
       {/* 2-Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
-          {/* Left Column: Create Form (5 columns) */}
-          <div className="lg:col-span-5">
-              <div className="glass-card rounded-[24px] p-6 lg:p-8 lg:sticky lg:top-8">
-                  <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
-                      <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-                          <PlusCircle className="w-5 h-5 text-blue-400" />
-                          Create New Job
-                      </h2>
+
+        {/* Left Column: Create Form (5 columns) */}
+        <div className="lg:col-span-5">
+          <div className="glass-card rounded-[24px] p-6 lg:p-8 lg:sticky lg:top-8">
+            <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-4">
+              <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+                <PlusCircle className="w-5 h-5 text-blue-400" />
+                Create New Job
+              </h2>
+            </div>
+
+            {renderJobForm(false)}
+          </div>
+        </div>
+
+        {/* Right Column: Active Jobs (7 columns) */}
+        <div className="lg:col-span-7">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-white">Active Jobs ({jobs.length})</h2>
+          </div>
+
+          <div className="space-y-4">
+            {jobs.length === 0 ? (
+              <div className="glass-card rounded-2xl p-8 text-center">
+                <p className="text-muted text-sm">No active jobs found. Create one to get started.</p>
+              </div>
+            ) : jobs.map(job => (
+              <div key={job.id} className={`glass-card rounded-2xl p-4 sm:p-5 border-l-2 relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all ${job.status === 'Active' ? 'border-l-orange-500' : 'border-l-neutral-600 opacity-60'}`}>
+
+                {/* Left Info Section */}
+                <div>
+                  <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                    <div className={`w-2 h-2 rounded-full shrink-0 ${job.status === 'Active' ? 'bg-orange-500 animate-pulse' : 'bg-neutral-500'}`}></div>
+                    <h3 className="text-lg font-bold text-white tracking-tight">{job.name}</h3>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold shrink-0 ${getMethodStyle(job.method)}`}>{job.method}</span>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold shrink-0 ${job.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-neutral-500/10 text-neutral-400'}`}>
+                      {job.status}
+                    </span>
                   </div>
-                  
-                  {renderJobForm(false)}
-              </div>
-          </div>
+                  <div className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors ml-4 sm:ml-5">
+                    <LinkIcon className="w-3.5 h-3.5 shrink-0" />
+                    <a href={job.url} target="_blank" rel="noreferrer" className="underline-offset-4 hover:underline truncate max-w-[200px] sm:max-w-xs block">{job.url}</a>
+                  </div>
+                  <div className="flex items-center gap-2 mt-2 ml-4 sm:ml-5">
+                    <span className="px-2 py-0.5 bg-white/5 rounded text-xs text-muted font-mono shrink-0">{job.cron}</span>
+                    <span className="text-xs text-muted shrink-0">•</span>
+                    <span className="text-xs text-muted truncate">{job.agent}</span>
+                  </div>
+                </div>
 
-          {/* Right Column: Active Jobs (7 columns) */}
-          <div className="lg:col-span-7">
-              <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold text-white">Active Jobs ({jobs.length})</h2>
+                {/* Right Actions Section */}
+                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-4 sm:ml-0">
+                  <button onClick={() => { setDetailedJob(job); setIsModalEditing(false); }} className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-muted hover:text-white transition-colors" title="Detailed View">
+                    <FileText className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => { setDetailedJob(job); handleEdit(job); setIsModalEditing(true); }} className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-muted hover:text-white transition-colors" title="Edit">
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => toggleStatus(job.id)} className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-muted hover:text-white transition-colors" title={job.status === 'Active' ? "Pause" : "Resume"}>
+                    {job.status === 'Active' ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                  </button>
+                  <button onClick={() => setJobToDelete(job)} className="w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 flex items-center justify-center transition-colors" title="Delete">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-              
-              <div className="space-y-4">
-                  {jobs.length === 0 ? (
-                    <div className="glass-card rounded-2xl p-8 text-center">
-                        <p className="text-muted text-sm">No active jobs found. Create one to get started.</p>
-                    </div>
-                  ) : jobs.map(job => (
-                    <div key={job.id} className={`glass-card rounded-2xl p-4 sm:p-5 border-l-2 relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all ${job.status === 'Active' ? 'border-l-orange-500' : 'border-l-neutral-600 opacity-60'}`}>
-                      
-                      {/* Left Info Section */}
-                      <div>
-                        <div className="flex items-center gap-2 sm:gap-3 mb-2">
-                          <div className={`w-2 h-2 rounded-full shrink-0 ${job.status === 'Active' ? 'bg-orange-500 animate-pulse' : 'bg-neutral-500'}`}></div>
-                          <h3 className="text-lg font-bold text-white tracking-tight">{job.name}</h3>
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold shrink-0 ${getMethodStyle(job.method)}`}>{job.method}</span>
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold shrink-0 ${job.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-neutral-500/10 text-neutral-400'}`}>
-                            {job.status}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors ml-4 sm:ml-5">
-                          <LinkIcon className="w-3.5 h-3.5 shrink-0" />
-                          <a href={job.url} target="_blank" rel="noreferrer" className="underline-offset-4 hover:underline truncate max-w-[200px] sm:max-w-xs block">{job.url}</a>
-                        </div>
-                        <div className="flex items-center gap-2 mt-2 ml-4 sm:ml-5">
-                          <span className="px-2 py-0.5 bg-white/5 rounded text-xs text-muted font-mono shrink-0">{job.cron}</span>
-                          <span className="text-xs text-muted shrink-0">•</span>
-                          <span className="text-xs text-muted truncate">{job.agent}</span>
-                        </div>
-                      </div>
-
-                      {/* Right Actions Section */}
-                      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-4 sm:ml-0">
-                        <button onClick={() => { setDetailedJob(job); setIsModalEditing(false); }} className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-muted hover:text-white transition-colors" title="Detailed View">
-                          <FileText className="w-4 h-4" />
-                        </button>
-                        <button onClick={() => { setDetailedJob(job); handleEdit(job); setIsModalEditing(true); }} className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-muted hover:text-white transition-colors" title="Edit">
-                          <Pencil className="w-4 h-4" />
-                        </button>
-                        <button onClick={() => toggleStatus(job.id)} className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-muted hover:text-white transition-colors" title={job.status === 'Active' ? "Pause" : "Resume"}>
-                          {job.status === 'Active' ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                        </button>
-                        <button onClick={() => setJobToDelete(job)} className="w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 flex items-center justify-center transition-colors" title="Delete">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-              </div>
+            ))}
           </div>
+        </div>
       </div>
 
       {/* Detailed View / Edit Modal */}
       {detailedJob && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
-            
+
             {/* Modal Header */}
             <div className="flex items-start sm:items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-4 border-b border-white/5 shrink-0 bg-[#0a0a0a] z-10">
               <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 flex-1 min-w-0 pr-2">
@@ -582,7 +675,7 @@ export default function ChronydPage() {
                 </button>
               </div>
             </div>
-            
+
             {/* Modal Body */}
             <div className="p-6 overflow-y-auto custom-scrollbar flex-1 relative">
               {isModalEditing ? (
@@ -661,7 +754,7 @@ export default function ChronydPage() {
                     <div className="bg-[#0a0a0a] border border-white/10 rounded-xl p-4 h-[280px] overflow-y-auto font-mono text-xs custom-scrollbar shadow-inner">
                       {detailedJob.lastRun !== 'Never' ? (
                         <>
-                          <LogItem 
+                          <LogItem
                             timestamp="2026-07-11 14:00:00"
                             status="200 OK"
                             time="124ms"
@@ -669,7 +762,7 @@ export default function ChronydPage() {
                             requestBody={detailedJob.payload || "{\n  \"action\": \"sync\"\n}"}
                             responseBody={`{\n  "status": "healthy",\n  "uptime": 342991,\n  "message": "Synchronization completed successfully without any errors."\n}`}
                           />
-                          <LogItem 
+                          <LogItem
                             timestamp="2026-07-11 13:45:00"
                             status="200 OK"
                             time="110ms"
