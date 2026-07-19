@@ -1,5 +1,7 @@
 "use client";
 
+import { SuchnaProvider } from "@/components/Suchna";
+
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { 
@@ -130,7 +132,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   );
 
   return (
-    <div className="antialiased h-screen flex overflow-hidden app-bg selection:bg-white/20 font-sans">
+    <SuchnaProvider>
+      <div className="antialiased h-screen flex overflow-hidden app-bg selection:bg-white/20 font-sans">
       
       {/* Desktop Sidebar */}
       <aside className="w-64 border-r border-border bg-black/50 backdrop-blur-xl flex-col h-full hidden md:flex">
@@ -191,5 +194,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </main>
 
     </div>
+    </SuchnaProvider>
   );
 }

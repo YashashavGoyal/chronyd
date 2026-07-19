@@ -18,6 +18,7 @@ import {
   Clock,
   RefreshCw
 } from "lucide-react";
+import { useSuchna, NotificationType } from "@/components/Suchna";
 
 // Types
 type HeaderKV = { id: string; key: string; value: string; enabled: boolean };
@@ -243,6 +244,7 @@ const validateCron = (cronStr: string): string | null => {
 };
 
 export default function ChronydPage() {
+  const { notify } = useSuchna();
   const [jobs, setJobs] = useState<Job[]>(initialJobs);
 
   // Shared Form State (Used for both Create and Edit)
@@ -346,6 +348,7 @@ export default function ChronydPage() {
 
     const trimmedName = name.trim();
     if (!trimmedName) {
+      notify(NotificationType.ERROR, "Job name is required.");
       setFormError("Job name is required.");
       return;
     }
@@ -356,12 +359,14 @@ export default function ChronydPage() {
         throw new Error();
       }
     } catch {
+      notify(NotificationType.ERROR, "Please enter a valid HTTP/HTTPS URL.");
       setFormError("Please enter a valid HTTP/HTTPS URL.");
       return;
     }
 
     const cronError = validateCron(cron);
     if (cronError) {
+      notify(NotificationType.ERROR, cronError);
       setFormError(cronError);
       return;
     }
@@ -370,6 +375,7 @@ export default function ChronydPage() {
       try {
         JSON.parse(payload);
       } catch {
+        notify(NotificationType.ERROR, "Body Payload must be valid JSON.");
         setFormError("Body Payload must be valid JSON.");
         return;
       }
@@ -379,6 +385,7 @@ export default function ChronydPage() {
       try {
         JSON.parse(headersJSON);
       } catch {
+        notify(NotificationType.ERROR, "Headers must be valid JSON.");
         setFormError("Headers must be valid JSON.");
         return;
       }
@@ -404,18 +411,25 @@ export default function ChronydPage() {
     };
 
     if (isEdit && editingId) {
-      const updatedJobs = jobs.map(j => j.id === editingId ? newJob : j);
-      setJobs(updatedJobs);
-      setDetailedJob(newJob);
-      setIsModalEditing(false); // Return to read-only view in modal
+      setJobs(jobs.map(j => j.id === newJob.id ? newJob : j));
+      setIsModalEditing(false);
+      notify(NotificationType.SUCCESS, "Job updated successfully!");
     } else {
       setJobs([newJob, ...jobs]);
       resetForm();
+      notify(NotificationType.SUCCESS, "New job scheduled successfully!");
     }
   };
 
   const toggleStatus = (id: string) => {
-    setJobs(jobs.map(j => j.id === id ? { ...j, status: j.status === "Active" ? "Paused" : "Active" } : j));
+    setJobs(jobs.map(j => {
+      if (j.id === id) {
+        const newStatus = j.status === 'Active' ? 'Paused' : 'Active';
+        notify(NotificationType.INFO, `Job ${newStatus === 'Active' ? 'resumed' : 'paused'} successfully.`);
+        return { ...j, status: newStatus as "Active" | "Paused" };
+      }
+      return j;
+    }));
     if (detailedJob && detailedJob.id === id) {
       setDetailedJob({ ...detailedJob, status: detailedJob.status === "Active" ? "Paused" : "Active" });
     }
@@ -587,7 +601,11 @@ export default function ChronydPage() {
         <div className="lg:col-span-7">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-white">Active Jobs ({jobs.length})</h2>
-            <button type="button" className="text-[11px] sm:text-xs font-medium text-muted hover:text-white flex items-center gap-1.5 transition-colors bg-white/5 hover:bg-white/10 px-2.5 sm:px-3 py-1.5 rounded-lg border border-white/5 shadow-sm">
+            <button 
+              type="button" 
+              onClick={() => notify(NotificationType.INFO, "Refreshing active jobs...")}
+              className="text-[11px] sm:text-xs font-medium text-muted hover:text-white flex items-center gap-1.5 transition-colors bg-white/5 hover:bg-white/10 px-2.5 sm:px-3 py-1.5 rounded-lg border border-white/5 shadow-sm"
+            >
               <RefreshCw className="w-3.5 h-3.5" /> Refresh
             </button>
           </div>
