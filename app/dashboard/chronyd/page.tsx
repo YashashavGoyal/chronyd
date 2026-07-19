@@ -587,6 +587,9 @@ export default function ChronydPage() {
         <div className="lg:col-span-7">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-white">Active Jobs ({jobs.length})</h2>
+            <button type="button" className="text-[11px] sm:text-xs font-medium text-muted hover:text-white flex items-center gap-1.5 transition-colors bg-white/5 hover:bg-white/10 px-2.5 sm:px-3 py-1.5 rounded-lg border border-white/5 shadow-sm">
+              <RefreshCw className="w-3.5 h-3.5" /> Refresh
+            </button>
           </div>
 
           <div className="space-y-4">
