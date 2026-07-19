@@ -102,6 +102,104 @@ const CustomSelect = ({
   );
 };
 
+const LogItem = ({ 
+  timestamp, 
+  status, 
+  time, 
+  requestBody, 
+  responseBody,
+  requestHeaders,
+  responseHeaders,
+  isSuccess
+}: { 
+  timestamp: string, 
+  status: string, 
+  time: string, 
+  requestBody: string, 
+  responseBody: string,
+  requestHeaders?: string,
+  responseHeaders?: string,
+  isSuccess: boolean
+}) => {
+  const [expanded, setExpanded] = useState(false);
+  const [showHeaders, setShowHeaders] = useState(false);
+  
+  return (
+    <div className="border-b border-white/5 last:border-0 pb-3 mb-3 last:pb-0 last:mb-0">
+      <div 
+        className="cursor-pointer flex flex-col gap-1.5 group"
+        onClick={() => setExpanded(!expanded)}
+      >
+        <div className="flex items-start justify-between gap-2">
+            <div className={`${isSuccess ? 'text-green-400' : 'text-red-400'} font-medium`}>
+              [{timestamp}] {isSuccess ? 'SUCCESS' : 'ERROR'}: {status} - Response Time: {time}
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-muted shrink-0 mt-0.5 transition-transform ${expanded ? 'rotate-180' : ''}`}><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        
+        {!expanded ? (
+           <div className="text-muted truncate opacity-80 group-hover:opacity-100 transition-opacity">{responseBody}</div>
+        ) : (
+           <div className="mt-2 space-y-3 cursor-text" onClick={e => e.stopPropagation()}>
+              
+              <div className="flex justify-end">
+                 <button 
+                   onClick={(e) => { e.stopPropagation(); setShowHeaders(!showHeaders); }} 
+                   className="text-[10px] bg-white/5 hover:bg-white/10 border border-white/10 text-muted hover:text-white px-2.5 py-1 rounded-md transition-colors"
+                 >
+                   {showHeaders ? 'Hide Headers' : 'Show Headers'}
+                 </button>
+              </div>
+
+              {showHeaders && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 animate-in fade-in zoom-in-95 duration-200">
+                  <div>
+                      <div className="text-[10px] text-muted/70 mb-1 uppercase tracking-wider font-sans">Request Headers</div>
+                      <div className="bg-black/50 border border-white/5 p-2.5 rounded-lg overflow-x-auto custom-scrollbar">
+                        <pre className="text-purple-300/90 text-[10px]">{requestHeaders || "{}"}</pre>
+                      </div>
+                  </div>
+                  <div>
+                      <div className="text-[10px] text-muted/70 mb-1 uppercase tracking-wider font-sans">Response Headers</div>
+                      <div className="bg-black/50 border border-white/5 p-2.5 rounded-lg overflow-x-auto custom-scrollbar">
+                        <pre className="text-emerald-300/90 text-[10px]">{responseHeaders || "{}"}</pre>
+                      </div>
+                  </div>
+                </div>
+              )}
+
+              <div>
+                  <div className="text-[10px] text-muted/70 mb-1 uppercase tracking-wider font-sans">Request Body</div>
+                  <div className="bg-black/50 border border-white/5 p-2.5 rounded-lg overflow-x-auto custom-scrollbar">
+                    <pre className="text-blue-300/90">{requestBody || "Empty body"}</pre>
+                  </div>
+              </div>
+              <div>
+                  <div className="text-[10px] text-muted/70 mb-1 uppercase tracking-wider font-sans">Response Body</div>
+                  <div className="bg-black/50 border border-white/5 p-2.5 rounded-lg overflow-x-auto custom-scrollbar">
+                    <pre className="text-muted whitespace-pre-wrap break-all">{responseBody}</pre>
+                  </div>
+              </div>
+           </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const getMethodStyle = (method: string) => {
+  switch(method) {
+    case 'GET': return 'bg-green-500/10 border-green-500/20 text-green-400';
+    case 'POST': return 'bg-blue-500/10 border-blue-500/20 text-blue-400';
+    case 'DELETE': return 'bg-red-500/10 border-red-500/20 text-red-400';
+    case 'PUT':
+    case 'PATCH': return 'bg-purple-500/10 border-purple-500/20 text-purple-400';
+    case 'HEAD':
+    case 'OPTIONS': return 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400';
+    default: return 'bg-neutral-500/10 border-neutral-500/20 text-neutral-400';
+  }
+};
+
 export default function ChronydPage() {
   const [jobs, setJobs] = useState<Job[]>(initialJobs);
   
@@ -125,6 +223,7 @@ export default function ChronydPage() {
   const [detailedJob, setDetailedJob] = useState<Job | null>(null);
   const [jobToDelete, setJobToDelete] = useState<Job | null>(null);
   const [isModalEditing, setIsModalEditing] = useState(false);
+  const [manualBodyEnabled, setManualBodyEnabled] = useState(false);
 
   // Handlers
   const handleHeaderModeSwitch = (mode: "kv" | "json") => {
@@ -179,6 +278,7 @@ export default function ChronydPage() {
     setHeaderMode("kv");
     setHeadersKV([{ id: Date.now().toString(), key: "Content-Type", value: "application/json", enabled: true }]);
     setHeadersJSON("");
+    setManualBodyEnabled(false);
   };
 
   const handleEdit = (job: Job) => {
@@ -192,11 +292,16 @@ export default function ChronydPage() {
     setHeaderMode(job.headerMode);
     setHeadersKV(job.headersKV);
     setHeadersJSON(job.headersJSON);
+    setManualBodyEnabled(!!job.payload);
   };
 
   const handleSubmit = (e: React.FormEvent, isEdit: boolean) => {
     e.preventDefault();
     if (!name || !url) return;
+
+    // Reset payload to empty if method doesn't support it or if it was not manually enabled
+    const finalPayload = method === "HEAD" ? "" : 
+                         (["GET", "DELETE", "OPTIONS"].includes(method) && !manualBodyEnabled) ? "" : payload;
 
     const newJob: Job = {
       id: isEdit && editingId ? editingId : Math.random().toString(36).substr(2, 8),
@@ -205,7 +310,7 @@ export default function ChronydPage() {
       method,
       url,
       cron,
-      payload,
+      payload: finalPayload,
       status: "Active",
       headerMode,
       headersKV,
@@ -266,7 +371,7 @@ export default function ChronydPage() {
                   label="Method" 
                   value={method} 
                   onChange={setMethod} 
-                  options={["GET", "POST", "PUT", "PATCH", "DELETE"]} 
+                  options={["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]} 
               />
           </div>
       </div>
@@ -326,11 +431,26 @@ export default function ChronydPage() {
           )}
       </div>
 
-      {/* Payload */}
-      <div className="pt-2">
-          <label className="block text-[9px] sm:text-[10px] font-medium text-muted mb-1 sm:mb-1.5 uppercase tracking-wide">Body Payload (Optional JSON)</label>
-          <textarea rows={3} value={payload} onChange={e => setPayload(e.target.value)} placeholder='{"action": "sync", "force": true}' className="input-field w-full rounded-xl px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm text-white font-mono placeholder:text-muted/50 resize-none custom-scrollbar"></textarea>
-      </div>
+      {/* Payload Section */}
+      {method !== "HEAD" && (
+        <div className="pt-2 animate-in fade-in slide-in-from-top-2 duration-200">
+          {(["POST", "PUT", "PATCH"].includes(method) || manualBodyEnabled) ? (
+            <>
+              <div className="flex items-center justify-between mb-1 sm:mb-1.5">
+                  <label className="block text-[9px] sm:text-[10px] font-medium text-muted uppercase tracking-wide">Body Payload (Optional JSON)</label>
+                  {["GET", "DELETE", "OPTIONS"].includes(method) && (
+                      <button type="button" onClick={() => { setManualBodyEnabled(false); setPayload(""); }} className="text-[9px] text-red-400 hover:text-red-300">Remove Body</button>
+                  )}
+              </div>
+              <textarea rows={3} value={payload} onChange={e => setPayload(e.target.value)} placeholder='{"action": "sync", "force": true}' className="input-field w-full rounded-xl px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs sm:text-sm text-white font-mono placeholder:text-muted/50 resize-none custom-scrollbar"></textarea>
+            </>
+          ) : (
+             <button type="button" onClick={() => setManualBodyEnabled(true)} className="w-full py-2 border border-dashed border-white/10 rounded-xl text-[10px] sm:text-xs text-muted hover:text-white hover:border-white/30 transition-colors">
+                 + Add Body Payload
+             </button>
+          )}
+        </div>
+      )}
 
       {/* Submit Footer */}
       <div className="pt-3 sm:pt-4 border-t border-white/5">
@@ -389,11 +509,7 @@ export default function ChronydPage() {
                         <div className="flex items-center gap-2 sm:gap-3 mb-2">
                           <div className={`w-2 h-2 rounded-full shrink-0 ${job.status === 'Active' ? 'bg-orange-500 animate-pulse' : 'bg-neutral-500'}`}></div>
                           <h3 className="text-lg font-bold text-white tracking-tight">{job.name}</h3>
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold shrink-0 ${job.method === 'GET' ? 'bg-green-500/10 border border-green-500/20 text-green-400' :
-                            job.method === 'POST' ? 'bg-blue-500/10 border border-blue-500/20 text-blue-400' :
-                              job.method === 'DELETE' ? 'bg-red-500/10 border border-red-500/20 text-red-400' :
-                                'bg-purple-500/10 border border-purple-500/20 text-purple-400'
-                            }`}>{job.method}</span>
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold shrink-0 ${getMethodStyle(job.method)}`}>{job.method}</span>
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold shrink-0 ${job.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-neutral-500/10 text-neutral-400'}`}>
                             {job.status}
                           </span>
@@ -442,11 +558,7 @@ export default function ChronydPage() {
                   {isModalEditing ? 'Edit Job: ' : ''}<span className={isModalEditing ? 'text-white/80' : ''}>{detailedJob.name}</span>
                 </h2>
                 {!isModalEditing && (
-                  <span className={`w-max px-2 py-0.5 rounded text-[10px] font-bold shrink-0 ${detailedJob.method === 'GET' ? 'bg-green-500/10 border border-green-500/20 text-green-400' :
-                    detailedJob.method === 'POST' ? 'bg-blue-500/10 border border-blue-500/20 text-blue-400' :
-                      detailedJob.method === 'DELETE' ? 'bg-red-500/10 border border-red-500/20 text-red-400' :
-                        'bg-purple-500/10 border border-purple-500/20 text-purple-400'
-                    }`}>{detailedJob.method}</span>
+                  <span className={`w-max px-2 py-0.5 rounded text-[10px] font-bold shrink-0 ${getMethodStyle(detailedJob.method)}`}>{detailedJob.method}</span>
                 )}
               </div>
               <div className="flex items-center gap-1.5 sm:gap-3 shrink-0 pt-0.5 sm:pt-0">
@@ -485,11 +597,7 @@ export default function ChronydPage() {
                   <div className="mb-6">
                     <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wide pl-1">Target Endpoint</p>
                     <div className="flex items-center gap-3 bg-black/40 border border-white/5 p-3.5 rounded-xl">
-                      <span className={`px-2 py-1 rounded text-[10px] font-bold shrink-0 ${detailedJob.method === 'GET' ? 'bg-green-500/10 border border-green-500/20 text-green-400' :
-                        detailedJob.method === 'POST' ? 'bg-blue-500/10 border border-blue-500/20 text-blue-400' :
-                          detailedJob.method === 'DELETE' ? 'bg-red-500/10 border border-red-500/20 text-red-400' :
-                            'bg-purple-500/10 border border-purple-500/20 text-purple-400'
-                        }`}>{detailedJob.method}</span>
+                      <span className={`px-2 py-1 rounded text-[10px] font-bold shrink-0 ${getMethodStyle(detailedJob.method)}`}>{detailedJob.method}</span>
                       <a href={detailedJob.url} target="_blank" rel="noreferrer" className="font-mono text-sm text-blue-400 hover:text-blue-300 truncate block">{detailedJob.url}</a>
                     </div>
                   </div>
@@ -550,17 +658,28 @@ export default function ChronydPage() {
                         <RefreshCw className="w-3 h-3" /> Refresh
                       </button>
                     </div>
-                    <div className="bg-black border border-white/10 rounded-xl p-4 h-64 overflow-y-auto font-mono text-xs space-y-2 custom-scrollbar">
+                    <div className="bg-[#0a0a0a] border border-white/10 rounded-xl p-4 h-[280px] overflow-y-auto font-mono text-xs custom-scrollbar shadow-inner">
                       {detailedJob.lastRun !== 'Never' ? (
                         <>
-                          <div className="text-green-400">[2026-07-11 14:00:00] SUCCESS: 200 OK - Response Time: 124ms</div>
-                          <div className="text-muted">{`{ "status": "healthy", "uptime": 342991 }`}</div>
-                          <div className="border-b border-white/5 my-2"></div>
-                          <div className="text-green-400">[2026-07-11 13:45:00] SUCCESS: 200 OK - Response Time: 110ms</div>
-                          <div className="text-muted">{`{ "status": "healthy", "uptime": 342091 }`}</div>
+                          <LogItem 
+                            timestamp="2026-07-11 14:00:00"
+                            status="200 OK"
+                            time="124ms"
+                            isSuccess={true}
+                            requestBody={detailedJob.payload || "{\n  \"action\": \"sync\"\n}"}
+                            responseBody={`{\n  "status": "healthy",\n  "uptime": 342991,\n  "message": "Synchronization completed successfully without any errors."\n}`}
+                          />
+                          <LogItem 
+                            timestamp="2026-07-11 13:45:00"
+                            status="200 OK"
+                            time="110ms"
+                            isSuccess={true}
+                            requestBody={detailedJob.payload || "{\n  \"action\": \"sync\"\n}"}
+                            responseBody={`{\n  "status": "healthy",\n  "uptime": 342091\n}`}
+                          />
                         </>
                       ) : (
-                        <div className="text-muted opacity-50 italic">Waiting for first execution...</div>
+                        <div className="text-muted opacity-50 italic flex items-center justify-center h-full">Waiting for first execution...</div>
                       )}
                     </div>
                   </div>
